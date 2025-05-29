@@ -91,6 +91,7 @@ class WorkoutPage extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 120.h),
             ],
           ),
         ),
@@ -437,7 +438,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 children: [
                   Text(
                     'Suggest Exercise',
-                    style: TextStyle(color: Colors.redAccent, fontSize: 20.sp),
+                    style: TextStyle(color: Color(0xFFF5838C), fontSize: 20.sp),
                   ),
                   GestureDetector(
                     onTap: _toggleDropdown,
@@ -462,6 +463,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 ],
               ),
             ),
+            SizedBox(height: 8.h),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),

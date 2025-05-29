@@ -46,6 +46,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omega_web_inv/User/Auth_Screen/screens/Home/home_screen.dart';
+import 'package:omega_web_inv/User/Auth_Screen/screens/Nutrition/nutrition_page.dart';
+import 'package:omega_web_inv/User/Auth_Screen/screens/Progress/screen/progress_screen.dart';
 import 'package:omega_web_inv/User/Auth_Screen/screens/Workouts/workout_page.dart';
 
 class BottomNavController extends GetxController {
@@ -54,10 +56,8 @@ class BottomNavController extends GetxController {
   final List<Widget> screens = [
     HomeContent(),
     WorkoutPage(),
-    const Center(
-      child: Text('Favorites', style: TextStyle(color: Colors.white)),
-    ),
-    const Center(child: Text('Stats', style: TextStyle(color: Colors.white))),
+    NutritionPage(),
+    ProgressScreen(),
     const Center(child: Text('Profile', style: TextStyle(color: Colors.white))),
   ];
 

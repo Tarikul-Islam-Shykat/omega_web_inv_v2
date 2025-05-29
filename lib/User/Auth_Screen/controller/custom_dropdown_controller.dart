@@ -6,6 +6,16 @@ class CustomDropDownController extends GetxController {
   ); // Non-null, empty string as default
   final RxMap<String, bool> checkboxStates = RxMap<String, bool>({});
 
+  final RxBool showDropdown = false.obs;
+
+  void toggleDropdown() {
+    showDropdown.value = !showDropdown.value;
+  }
+
+  void hideDropdown() {
+    showDropdown.value = false;
+  }
+
   // Initialize items and set initial value
   void initializeItems(List<String> items, String? initialValue) {
     // Only clear and reinitialize if items have changed

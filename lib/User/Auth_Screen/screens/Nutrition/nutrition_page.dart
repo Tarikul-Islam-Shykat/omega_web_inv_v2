@@ -55,7 +55,6 @@ class NutritionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final sw = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -95,6 +94,7 @@ class NutritionPage extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 120.h),
             ],
           ),
         ),
@@ -108,7 +108,7 @@ class NutritionPage extends StatelessWidget {
     return Obx(
       () => _buildCard(
         sw,
-        'Nutrition Goals',
+        'Meal Goals',
         goalController.caloriesEaten.value.split(' ')[0],
       ),
     );
@@ -317,7 +317,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                       child: Row(
                         children: [
                           Text(
-                            'See all',
+                            'Nutrition Tips',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12.sp,
@@ -426,8 +426,9 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 children: [
                   Text(
                     'Suggest Meals',
-                    style: TextStyle(color: Colors.redAccent, fontSize: 20.sp),
+                    style: TextStyle(color: Color(0xFFF5838C), fontSize: 20.sp),
                   ),
+
                   GestureDetector(
                     onTap: _toggleDropdown,
                     child: Row(
@@ -451,6 +452,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 ],
               ),
             ),
+            SizedBox(height: 8.h),
             ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),

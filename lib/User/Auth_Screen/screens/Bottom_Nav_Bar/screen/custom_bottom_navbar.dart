@@ -94,8 +94,8 @@ class BottomNavBarScreen extends StatelessWidget {
           children: [
             controller.currentScreen,
             Positioned(
-              left: 0,
-              right: 0,
+              left: -10.w,
+              right: -10.w,
               bottom: 10.h,
               child: CustomBottomNavBar(),
             ),
