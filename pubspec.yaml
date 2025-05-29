@@ -54,6 +54,7 @@ dependencies:
   flutter_svg: ^2.1.0
   animate_do: ^4.2.0
   slide_to_act: ^2.0.2
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:omega_web_inv/User/Auth_Screen/screens/Home/controller/goal_controller.dart';
 import 'core/const/app_colors.dart';
 import 'route/route.dart';
 
 void main() async {
+  Get.put(GoalController());
   WidgetsFlutterBinding.ensureInitialized();
   configEasyLoading();
   // await Firebase.initializeApp(
@@ -38,10 +40,11 @@ class MyApp extends StatelessWidget {
       builder:
           (context, child) => GetMaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Magdalena_gia',
+            title: 'Omega_web_inv',
             getPages: AppRoute.routes,
             initialRoute: AppRoute.splashScreen,
             builder: EasyLoading.init(),
+            // home: WorkoutPage(),
           ),
     );
   }

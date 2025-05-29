@@ -54,7 +54,7 @@ class CustomTextField extends StatelessWidget {
           fontSize: fontSize ?? 16.sp,
           fontWeight: fontWeight ?? FontWeight.w400,
           height: lineHeight ?? 24.h / 16.h,
-          color: AppColors.blackColor,
+          color: AppColors.whiteColor,
         ),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
