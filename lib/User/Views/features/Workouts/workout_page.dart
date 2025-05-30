@@ -348,6 +348,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(child: _libraryItem(exercise)),
+                    SizedBox(width: 10.w),
                     Flexible(child: _libraryItem(exercise)),
                   ],
                 ),
@@ -361,65 +362,69 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
   }
 
   Widget _libraryItem(WorkoutModel workout) {
-    return Container(
-      width: 130.w,
-      height: 90.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        image: DecorationImage(
-          image: AssetImage(workout.imagePath),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.2),
-            BlendMode.darken,
+    return AspectRatio(
+      aspectRatio: 3 / 2,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          image: DecorationImage(
+            image: AssetImage(workout.imagePath),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.2),
+              BlendMode.darken,
+            ),
           ),
         ),
-      ),
-      child: Stack(
-        alignment: Alignment.bottomLeft,
-        children: [
-          Center(
-            child: CircleAvatar(
-              backgroundColor: Colors.white.withAlpha(18),
-              child: Image.asset(
-                'assets/images/pause.png',
-                width: 10.w,
-                height: 10.h,
+        child: Stack(
+          alignment: Alignment.bottomLeft,
+          children: [
+            Center(
+              child: CircleAvatar(
+                backgroundColor: Colors.white.withAlpha(18),
+                child: Image.asset(
+                  'assets/images/pause.png',
+                  width: 10.w,
+                  height: 10.h,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(30),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              child: Row(
-                children: [
-                  Icon(Icons.timer, size: 14.sp, color: Colors.white),
-                  SizedBox(width: 4.w),
-                  Text(
-                    workout.time,
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withAlpha(30),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                child: FittedBox(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.timer, size: 14.sp, color: Colors.white),
+                      SizedBox(width: 4.w),
+                      Text(
+                        workout.time,
+                        style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                      ),
+                      SizedBox(width: 8.w),
+                      Icon(
+                        Icons.local_fire_department,
+                        size: 14.sp,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 4.w),
+                      Text(
+                        workout.kcal,
+                        style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 8.w),
-                  Icon(
-                    Icons.local_fire_department,
-                    size: 14.sp,
-                    color: Colors.white,
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    workout.kcal,
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -527,7 +532,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                   ...List.generate(_options.length, (index) {
                     return GestureDetector(
                       onTap: () => _toggleOption(index),
-                      child: Container(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
                           vertical: 8.h,
@@ -537,7 +542,9 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                             color: Colors.white.withAlpha(18),
                             borderRadius: BorderRadius.circular(10.r),
                           ),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Checkbox(
                                 value: _selectedOptions[index],
@@ -545,12 +552,19 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                                 activeColor: Colors.transparent,
                                 checkColor: Colors.white,
                                 side: BorderSide(color: Colors.white),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: VisualDensity.compact,
                               ),
-                              Text(
-                                _options[index],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.sp,
+                              Flexible(
+                                // Prevent text overflow
+                                child: Text(
+                                  _options[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.sp,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
