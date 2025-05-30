@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:omega_web_inv/User/Auth_Screen/screens/Home/controller/goal_controller.dart';
+import 'package:omega_web_inv/User/Views/features/Home/controller/goal_controller.dart';
 import 'core/const/app_colors.dart';
 import 'route/route.dart';
 
