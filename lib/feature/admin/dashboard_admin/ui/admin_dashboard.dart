@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:prettyrini/feature/admin/dashboard_admin/controller/dashboard_controller.dart';
+import 'package:prettyrini/feature/admin/fiteness_goal/ui/fitenss_goal.dart';
+import 'package:prettyrini/feature/admin/manage_nutrition/nutrition_page.dart';
+import 'package:prettyrini/feature/admin/manage_plans/ui/manage_plans.dart';
+import 'package:prettyrini/feature/admin/manage_progress/ui/manage_progress_page.dart';
+import 'package:prettyrini/feature/admin/manage_workout/workout_page.dart';
+import 'package:prettyrini/feature/admin/nutritionist_support/chats/nutritionis_support_page.dart';
+import 'package:prettyrini/feature/admin/trainer_support/view/trainer_support_page.dart';
+import 'package:prettyrini/feature/admin/user_manage/ui/user_manage_ui.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -136,11 +144,29 @@ class DashboardScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final entry = controller.dashboardData.entries.elementAt(index);
         return _buildDashboardCard(
-          title: entry.key,
-          value: entry.value,
-          gradientColors: controller.getGradientForIndex(index),
-          onTap: () => controller.onCardTap(entry.key, entry.value),
-        );
+            title: entry.key,
+            value: entry.value,
+            gradientColors: controller.getGradientForIndex(index),
+            onTap: () {
+              entry.key == 'Manage Users'
+                  ? Get.to(() => UserManagementScreen())
+                  : entry.key == "Manage Plan"
+                      ? Get.to(() => ManagePlanPage())
+                      : entry.key == "Fitness Goal"
+                          ? Get.to(() => FitnessGoalPage())
+                          : entry.key == "Manage Workout"
+                              ? Get.to(() => WorkoutPage())
+                              : entry.key == "Manage Nutrition"
+                                  ? Get.to(() => AdminNutritionPage())
+                                  : entry.key == "Manage Progress"
+                                      ? Get.to(() => ManageProgressPage())
+                                      : entry.key == "Trainer Support"
+                                          ? Get.to(() => TrainerSupportPage())
+                                          : entry.key == "Nutritionist Support"
+                                              ? Get.to(() =>
+                                                  NutritionistSupportPage())
+                                              : null;
+            });
       },
     );
   }

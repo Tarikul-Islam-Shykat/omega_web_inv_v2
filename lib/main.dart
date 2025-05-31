@@ -66,17 +66,14 @@ class MyApp extends StatelessWidget {
         // builder: EasyLoading.init(),
 
         // ! screens for progress
-        //   home: DashboardScreen(),
+        home: DashboardScreen(),
         //  home: UserProfilePage(),
-        // home: UserManagementScreen(),
-        //    home: ManagePlanPage(),
+        // home: ManagePlanPage(),
         // home: SelectFormatPage(),
-        //       home: FitnessGoalPage(),
         //  home: NutritionistSupportPage(),
-        // home: ManageProgressPage(),
-        //   home: AdminSideProgressScreen(),
-        //home: AdminNutritionPage(),
-        home: WorkoutPage(),
+        //home: ManageProgressPage(),
+        // home: AdminSideProgressScreen(),
+        //home: WorkoutPage(),
       ),
     );
   }

@@ -4,11 +4,12 @@ import 'package:prettyrini/feature/admin/manage_progress/controller/progress_cnt
 import 'package:prettyrini/feature/admin/manage_progress/widget/progress_widget.dart';
 
 class ManageProgressPage extends StatelessWidget {
-  const ManageProgressPage({Key? key}) : super(key: key);
+  const ManageProgressPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ManageProgressController controller = Get.put(ManageProgressController());
+    final ManageProgressController controller =
+        Get.put(ManageProgressController());
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final appBarHeight = screenHeight * 0.1;
@@ -34,7 +35,7 @@ class ManageProgressPage extends StatelessWidget {
                   ),
                   SizedBox(width: screenWidth * 0.02),
                   Text(
-                    'Manage Progress',
+                    'Manage Progresss',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: titleFontSize,
@@ -47,37 +48,38 @@ class ManageProgressPage extends StatelessWidget {
 
             // Main Progress Card
             Obx(() => Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.04,
-                vertical: screenHeight * 0.02,
-              ),
-              padding: EdgeInsets.all(screenWidth * 0.06),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2D5016),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Manage Progress',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: screenWidth * 0.048,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.04,
+                    vertical: screenHeight * 0.01,
                   ),
-                  SizedBox(height: screenHeight * 0.01),
-                  Text(
-                    controller.totalUsers.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: screenWidth * 0.08,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  padding: EdgeInsets.all(screenWidth * 0.06),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF7BD253).withValues(alpha: 0.18),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ],
-              ),
-            )),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Manage Progress',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenWidth * 0.048,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.01),
+                      Text(
+                        controller.totalUsers.toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenWidth * 0.08,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
 
             // Search Bar
             ProgressSearchBar(
@@ -118,7 +120,8 @@ class ManageProgressPage extends StatelessWidget {
                         return UserProgressCard(
                           user: user,
                           onTap: () => controller.showUserDetails(user),
-                          onDelete: () => controller.showDeleteConfirmation(user.id, user.name),
+                          onDelete: () => controller.showDeleteConfirmation(
+                              user.id, user.name),
                         );
                       },
                     )),
@@ -144,42 +147,43 @@ class ProgressStatsCard extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Obx(() => Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.04,
-        vertical: screenWidth * 0.02,
-      ),
-      padding: EdgeInsets.all(screenWidth * 0.04),
-      decoration: BoxDecoration(
-        color: const Color(0xFF3C3C3C),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem(
-            'Total Users',
-            controller.totalUsers.toString(),
-            Colors.white,
-            screenWidth,
+          margin: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.04,
+            vertical: screenWidth * 0.02,
           ),
-          _buildStatItem(
-            'Improved',
-            controller.improvedUsers.toString(),
-            Colors.green,
-            screenWidth,
+          padding: EdgeInsets.all(screenWidth * 0.04),
+          decoration: BoxDecoration(
+            color: const Color(0xFF3C3C3C),
+            borderRadius: BorderRadius.circular(12),
           ),
-          _buildStatItem(
-            'Declined',
-            controller.declinedUsers.toString(),
-            Colors.red,
-            screenWidth,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem(
+                'Total Users',
+                controller.totalUsers.toString(),
+                Colors.white,
+                screenWidth,
+              ),
+              _buildStatItem(
+                'Improved',
+                controller.improvedUsers.toString(),
+                Colors.green,
+                screenWidth,
+              ),
+              _buildStatItem(
+                'Declined',
+                controller.declinedUsers.toString(),
+                Colors.red,
+                screenWidth,
+              ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 
-  Widget _buildStatItem(String label, String value, Color color, double screenWidth) {
+  Widget _buildStatItem(
+      String label, String value, Color color, double screenWidth) {
     return Column(
       children: [
         Text(

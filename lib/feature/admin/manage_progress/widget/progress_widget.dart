@@ -39,9 +39,9 @@ class UserProgressCard extends StatelessWidget {
               radius: screenWidth * 0.065,
               backgroundImage: NetworkImage(user.profileImage),
             ),
-            
+
             SizedBox(width: cardPadding),
-            
+
             // User Info
             Expanded(
               child: Column(
@@ -68,7 +68,9 @@ class UserProgressCard extends StatelessWidget {
                       ),
                       SizedBox(width: cardPadding * 0.5),
                       Icon(
-                        user.isProgressUp ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                        user.isProgressUp
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
                         color: user.isProgressUp ? Colors.green : Colors.red,
                         size: fontSize,
                       ),
@@ -77,53 +79,53 @@ class UserProgressCard extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // More Options
-            PopupMenuButton<String>(
-              icon: const Icon(
-                Icons.more_horiz,
-                color: Colors.white70,
-              ),
-              color: const Color(0xFF2C2C2C),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              itemBuilder: (context) => [
-                PopupMenuItem<String>(
-                  value: 'view',
-                  child: Row(
-                    children: [
-                      const Icon(Icons.visibility, color: Colors.white70, size: 20),
-                      SizedBox(width: screenWidth * 0.03),
-                      const Text(
-                        'View Details',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: 'remove',
-                  child: Row(
-                    children: [
-                      const Icon(Icons.delete, color: Colors.red, size: 20),
-                      SizedBox(width: screenWidth * 0.03),
-                      const Text(
-                        'Remove',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-              onSelected: (value) {
-                if (value == 'view') {
-                  onTap();
-                } else if (value == 'remove') {
-                  onDelete();
-                }
-              },
-            ),
+            // PopupMenuButton<String>(
+            //   icon: const Icon(
+            //     Icons.more_horiz,
+            //     color: Colors.white70,
+            //   ),
+            //   color: const Color(0xFF2C2C2C),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(12),
+            //   ),
+            //   itemBuilder: (context) => [
+            //     PopupMenuItem<String>(
+            //       value: 'view',
+            //       child: Row(
+            //         children: [
+            //           const Icon(Icons.visibility, color: Colors.white70, size: 20),
+            //           SizedBox(width: screenWidth * 0.03),
+            //           const Text(
+            //             'View Details',
+            //             style: TextStyle(color: Colors.white),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     PopupMenuItem<String>(
+            //       value: 'remove',
+            //       child: Row(
+            //         children: [
+            //           const Icon(Icons.delete, color: Colors.red, size: 20),
+            //           SizedBox(width: screenWidth * 0.03),
+            //           const Text(
+            //             'Remove',
+            //             style: TextStyle(color: Colors.red),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            //   onSelected: (value) {
+            //     if (value == 'view') {
+            //       onTap();
+            //     } else if (value == 'remove') {
+            //       onDelete();
+            //     }
+            //   },
+            // ),
           ],
         ),
       ),

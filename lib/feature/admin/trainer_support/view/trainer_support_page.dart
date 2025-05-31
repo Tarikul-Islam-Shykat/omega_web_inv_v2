@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:prettyrini/feature/admin/nutritionist_support/controller/chat_controller.dart';
 import 'package:prettyrini/feature/admin/nutritionist_support/widget/chat_widget.dart';
 
-class NutritionistSupportPage extends StatelessWidget {
-  const NutritionistSupportPage({super.key});
+class TrainerSupportPage extends StatelessWidget {
+  const TrainerSupportPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +32,11 @@ class NutritionistSupportPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(width: screenWidth * 0.02),
+                  SizedBox(width: screenWidth * 0.15),
                   Text(
-                    'Nutritionist Support',
+                    'Trainer Support',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Color(0xFFF5838C),
                       fontSize: titleFontSize,
                       fontWeight: FontWeight.w600,
                     ),
@@ -49,18 +49,18 @@ class NutritionistSupportPage extends StatelessWidget {
             Obx(() => Container(
                   width: double.infinity,
                   margin: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.04,
-                    vertical: screenHeight * 0.01,
+                    horizontal: screenWidth * 0.03,
+                    vertical: screenHeight * 0.001,
                   ),
-                  padding: EdgeInsets.all(screenWidth * 0.06),
+                  padding: EdgeInsets.all(screenWidth * 0.03),
                   decoration: BoxDecoration(
-                    color: Color(0xFF02CAF6).withValues(alpha: 0.2),
+                    color: Color(0xFFD2C353).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
                     children: [
                       Text(
-                        'Nutritionist Support',
+                        'Trainer Support',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: screenWidth * 0.048,

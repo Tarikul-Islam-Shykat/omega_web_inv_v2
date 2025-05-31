@@ -4,7 +4,7 @@ import 'package:prettyrini/feature/admin/fiteness_goal/controller/fitness_contro
 import 'package:prettyrini/feature/admin/fiteness_goal/widget/fitness_goal_widgets.dart';
 
 class FitnessGoalPage extends StatelessWidget {
-  const FitnessGoalPage({Key? key}) : super(key: key);
+  const FitnessGoalPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +32,11 @@ class FitnessGoalPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(width: screenWidth * 0.02),
+                  SizedBox(width: screenWidth * 0.1),
                   Text(
                     'Fitness Goal',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Color(0xffF5838C).withValues(alpha: 1),
                       fontSize: titleFontSize,
                       fontWeight: FontWeight.w600,
                     ),
@@ -49,10 +49,10 @@ class FitnessGoalPage extends StatelessWidget {
             Container(
               width: double.infinity,
               margin: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.04,
-                vertical: screenHeight * 0.02,
+                horizontal: screenWidth * 0.03,
+                vertical: screenHeight * 0.01,
               ),
-              padding: EdgeInsets.all(screenWidth * 0.06),
+              padding: EdgeInsets.all(screenWidth * 0.05),
               decoration: BoxDecoration(
                 color: Colors.red.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16),
@@ -117,5 +117,3 @@ class FitnessGoalPage extends StatelessWidget {
     );
   }
 }
-
-

@@ -57,6 +57,10 @@ class AdminNutritionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sw = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final titleFontSize = screenWidth * 0.05;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -66,8 +70,30 @@ class AdminNutritionPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //  _goalCard(sw),
-              //  _selectMealCard(sw),
+              Container(
+                height: screenHeight * 0.05,
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () => Get.back(),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: screenWidth * 0.1),
+                    Text(
+                      'Manage Nutrition',
+                      style: TextStyle(
+                        color: Color(0xffF5838C).withValues(alpha: 1),
+                        fontSize: titleFontSize,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Container(
                 width: double.infinity,
                 margin: EdgeInsets.symmetric(
@@ -175,7 +201,7 @@ class AdminNutritionPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '$title ',
+                  '$title',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 26.sp,
@@ -318,9 +344,11 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                       children: [
                         Text(
                           nutrition.title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
