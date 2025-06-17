@@ -4,7 +4,6 @@ import '../feature/Auth/screens/find_account_screen.dart';
 import '../feature/Auth/screens/forget_pass_otp_verification.dart';
 import '../feature/Auth/screens/login_screen.dart';
 import '../feature/Auth/screens/otp_very_screen.dart';
-import '../feature/Auth/screens/reset_pasword_screen.dart';
 import '../feature/splash_screen/screen/splash_screen.dart';
 import '../feature/user/subscription/view/user_subscription_plan.dart';
 

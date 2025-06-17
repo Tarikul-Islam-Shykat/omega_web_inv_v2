@@ -4,8 +4,9 @@ import 'package:get/get.dart';
 import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_button.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_text_field.dart';
+
 import '../controller/forget_pasword_controller.dart';
-import 'forget_pass_otp_verification.dart';
+
 
 class FindAccountScreen extends StatelessWidget {
   final ForgetPasswordController controller = Get.put(ForgetPasswordController());
