@@ -13,7 +13,6 @@ import 'package:omega_web_inv/User/Views/features/Progress/model/progress_data.d
 import 'package:omega_web_inv/User/Views/features/Progress/model/workouts_sessions.dart'; // WorkoutSession here
 import 'package:omega_web_inv/User/Views/features/Progress/widget/custom_update_dialog.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_button.dart';
-import 'package:omega_web_inv/core/global_widegts/custom_dropdown_button.dart';
 
 class ProgressScreen extends StatelessWidget {
   final ProgressController _controller = ProgressController();
@@ -31,7 +30,7 @@ class ProgressScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -47,6 +47,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omega_web_inv/User/Views/features/Home/view/home_screen.dart';
 import 'package:omega_web_inv/User/Views/features/Nutrition/nutrition_page.dart';
+import 'package:omega_web_inv/User/Views/features/Community/view/user_community_screen.dart';
 import 'package:omega_web_inv/User/Views/features/Progress/screen/progress_screen.dart';
 import 'package:omega_web_inv/User/Views/features/Workouts/workout_page.dart';
 
@@ -58,7 +59,7 @@ class BottomNavController extends GetxController {
     WorkoutPage(),
     NutritionPage(),
     ProgressScreen(),
-    const Center(child: Text('Profile', style: TextStyle(color: Colors.white))),
+    CommunityScreen(),
   ];
 
   void changeIndex(int index) {

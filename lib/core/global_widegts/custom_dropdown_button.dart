@@ -53,7 +53,6 @@ class CustomDropDown extends StatelessWidget {
                   return DropdownMenuItem<String>(
                     value: label,
                     child: Container(
-                      // decoration: BoxDecoration(color: Color(0xFF000000)),
                       padding: EdgeInsets.symmetric(
                         vertical: 8.h,
                         horizontal: 12.w,

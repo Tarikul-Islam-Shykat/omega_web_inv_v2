@@ -5,105 +5,86 @@ import 'package:image_picker/image_picker.dart';
 import 'package:omega_web_inv/User/Views/features/Home/view/home_screen.dart';
 
 class UserInfoSetupController extends GetxController {
-  final nameController = TextEditingController();
-  final ageController = TextEditingController();
-  final weightController = TextEditingController();
-  final heightController = TextEditingController();
-  final dietaryPreferenceController = TextEditingController();
+  // Controllers for text fields
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController dietaryPreferenceController =
+      TextEditingController();
 
+  // Reactive state variables
   final Rx<File?> selectedImage = Rx<File?>(null);
   final RxBool isLoading = false.obs;
-  final RxString selectedGender = RxString('');
-  final RxString selectedFitnessGoal = RxString('');
-  final RxString userName = RxString('');
+  final RxString selectedGender = ''.obs;
+  final RxString selectedFitnessGoal = ''.obs;
+  final RxString userName = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    nameController.addListener(() {
-      userName.value = nameController.text;
-    });
+    // Update userName whenever nameController changes
+    nameController.addListener(
+      () => userName.value = nameController.text.trim(),
+    );
   }
 
   Future<void> pickImage() async {
     try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+      );
       if (pickedFile != null) {
         selectedImage.value = File(pickedFile.path);
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to pick image: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      _showErrorSnackbar('Failed to pick image', e.toString());
     }
   }
 
-  void setGender(String? value) {
-    selectedGender.value = value ?? '';
-  }
-
-  void setFitnessGoal(String? value) {
-    selectedFitnessGoal.value = value ?? '';
-  }
+  void setGender(String? value) => selectedGender.value = value ?? '';
+  void setFitnessGoal(String? value) => selectedFitnessGoal.value = value ?? '';
 
   String? validateInputs() {
-    if (userName.value.trim().isEmpty) return 'Name is required';
+    if (userName.value.isEmpty) return 'Name is required';
+
     if (ageController.text.trim().isEmpty) return 'Age is required';
-    if (int.tryParse(ageController.text) == null ||
-        int.parse(ageController.text) <= 0) {
-      return 'Enter a valid age';
-    }
+    final age = int.tryParse(ageController.text);
+    if (age == null || age <= 0) return 'Enter a valid age';
+
     if (weightController.text.trim().isEmpty) return 'Weight is required';
-    if (double.tryParse(weightController.text) == null ||
-        double.parse(weightController.text) <= 0) {
-      return 'Enter a valid weight';
-    }
+    final weight = double.tryParse(weightController.text);
+    if (weight == null || weight <= 0) return 'Enter a valid weight';
+
     if (heightController.text.trim().isEmpty) return 'Height is required';
-    if (double.tryParse(heightController.text) == null ||
-        double.parse(heightController.text) <= 0) {
-      return 'Enter a valid height';
-    }
+    final height = double.tryParse(heightController.text);
+    if (height == null || height <= 0) return 'Enter a valid height';
+
     if (selectedGender.value.isEmpty) return 'Gender is required';
     if (selectedFitnessGoal.value.isEmpty) return 'Fitness goal is required';
+
     return null;
   }
 
   Future<void> saveProfile() async {
     final error = validateInputs();
     if (error != null) {
-      Get.snackbar(
-        'Error',
-        error,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      _showErrorSnackbar('Error', error);
       return;
     }
 
     isLoading.value = true;
     try {
+      // Simulate API call
       await Future.delayed(const Duration(seconds: 2));
       Get.off(() => HomeContent());
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to save profile: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      _showErrorSnackbar('Failed to save profile', e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
-  // Provide goal data for cards
   List<Map<String, dynamic>> getGoalData() {
     return [
       {
@@ -131,6 +112,16 @@ class UserInfoSetupController extends GetxController {
         'icon': Icons.flag,
       },
     ];
+  }
+
+  void _showErrorSnackbar(String title, String message) {
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.TOP,
+    );
   }
 
   @override

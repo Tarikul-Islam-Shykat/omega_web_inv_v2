@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:omega_web_inv/User/Views/features/Home/controller/goal_controller.dart';
 import 'package:omega_web_inv/User/Views/features/Workouts/model/workout_model.dart';
 import 'package:omega_web_inv/User/Views/features/Home/controller/workout_plan_controller.dart';
+import 'package:omega_web_inv/User/Views/features/chat/chatbox/chat_message.dart';
 
 class WorkoutPage extends StatelessWidget {
   final WorkoutPlanController controller = Get.put(WorkoutPlanController());
@@ -58,6 +59,7 @@ class WorkoutPage extends StatelessWidget {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: EdgeInsets.only(top: 20.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,7 +85,9 @@ class WorkoutPage extends StatelessWidget {
                       backgroundColor: Colors.redAccent,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => ChatDetailScreen(contactName: 'Trainer'));
+                    },
                     child: Text(
                       'Your Trainer',
                       style: TextStyle(color: Colors.white, fontSize: 14.sp),

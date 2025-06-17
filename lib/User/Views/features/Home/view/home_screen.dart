@@ -26,9 +26,9 @@ class HomeContent extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.only(
-            left: 16.w,
-            right: 16.w,
-            top: 20.h,
+            left: 12.w,
+            right: 12.w,
+            top: 40.h,
             bottom: 120.h,
           ),
           child: Column(

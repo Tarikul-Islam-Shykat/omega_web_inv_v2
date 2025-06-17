@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -68,33 +69,36 @@ class SubscriptionPlan extends StatelessWidget {
                 }),
                 SizedBox(height: 16.h),
                 Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          log('Clicked');
-                        },
-                        child: Text(
-                          'Click here',
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Click here',
                           style: TextStyle(
                             color: Color(0xFFFB4958),
-                            fontSize: 12.sp,
+                            fontSize: 18.sp,
                             fontStyle: FontStyle.italic,
+                            fontWeight:
+                                FontWeight
+                                    .w500, // (optional) bold korle better look debe
+                          ),
+                          recognizer:
+                              TapGestureRecognizer()
+                                ..onTap = () {
+                                  log('Clicked');
+                                },
+                        ),
+                        TextSpan(
+                          text: ' to use your supplement add-on benefits.',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18.sp,
+                            fontStyle: FontStyle.normal,
                           ),
                         ),
-                      ),
-                      SizedBox(width: 5.w),
-                      Text(
-                        textAlign: TextAlign.center,
-                        'to use your supplement add-on benefits.',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14.sp,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -276,8 +280,24 @@ class SubscriptionPlan extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         if (selectedOption.isNotEmpty) {
-                          controller.confirmPlan(selectedOption);
+                          // controller.confirmPlan(selectedOption, planTitle);
                           // Get.back();
+
+                          controller.confirmPlan(
+                            planName: "Premium Tier",
+                            price: "\$9.99/month",
+                            features: [
+                              'Full workout library',
+                              'AI-personalized plans',
+                              'Full fitness + nutrition tracking',
+                              'Health app integrations',
+                              'Supplement recommendations + links',
+                              'Priority support',
+                            ],
+                            activatedOn: "29/04/2025",
+                            renewalOn: "29/05/2025",
+                            selectedOption: '$selectedOption ($planTitle)',
+                          );
 
                           Get.to(() => UserInfoSetup());
                           Get.snackbar(
