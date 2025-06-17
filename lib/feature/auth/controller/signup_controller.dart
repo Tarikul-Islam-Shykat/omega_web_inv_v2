@@ -1,11 +1,17 @@
 // import 'dart:convert';
 // import 'dart:developer';
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:omega_web_inv/core/global_widegts/app_snackbar.dart';
+import 'package:omega_web_inv/core/repository/network_caller/network_config.dart';
+
+import '../../../core/repository/network_caller/endpoints.dart';
+import '../../../route/route.dart';
+import '../screens/otp_very_screen.dart';
 
 class SignupController extends GetxController {
   final nameController = TextEditingController();
@@ -16,6 +22,7 @@ class SignupController extends GetxController {
   final dobController = TextEditingController();
   final referralCodeController = TextEditingController();
   final addressController = TextEditingController();
+  final NetworkConfig _networkConfig = NetworkConfig();
 
   final formKey = GlobalKey<FormState>();
 
@@ -189,6 +196,50 @@ class SignupController extends GetxController {
   //     );
   //   }
   // }
+
+  Future<bool> userSignUp()async{
+    if(phoneController.text.isEmpty || emailController.text.isEmpty || passwordController.text.isEmpty){
+      AppSnackbar.show(message: "Please fill all fields", isSuccess: false);
+      return false;
+    }
+    try{
+      isLoading.value = true;
+      String email = emailController.text;
+      String phone = phoneController.text;
+      String pass = passwordController.text;
+      String dob = dobController.text;
+      String dateBirth = DateTime.parse(dob).toUtc().toIso8601String();
+      final Map<String, dynamic>requestBody={
+        "email": email,
+        "phone": phone,
+        "birth": dateBirth,
+        "password": pass,
+      };
+      log(requestBody.toString());
+      final response = await _networkConfig.ApiRequestHandler(
+          RequestMethod.POST,
+          Urls.signUp,
+          jsonEncode(requestBody),
+          is_auth: false
+      );
+      if(response != null && response['success'] == true){
+        AppSnackbar.show(message: "${response['message']}", isSuccess: true);
+        Get.offNamed(AppRoute.loginScreen);
+        log("success");
+        return true;
+      }else{
+        AppSnackbar.show(message: "${response['message']}", isSuccess: false);
+        log("failed------${response['message']}");
+        return false;
+      }
+    }catch(e){
+      AppSnackbar.show(message: "Failed To SignUp $e", isSuccess: false);
+      log("failed Catch------$e");
+      return false;
+    }finally{
+      isLoading.value = false;
+    }
+  }
 
 
 

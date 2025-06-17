@@ -37,7 +37,7 @@ class NetworkConfig {
       } else if (method.name == RequestMethod.POST.name) {
         try {
           var req = await http.post(Uri.parse(url),
-              // headers: header,
+              headers: header,
               body: json_body);
 
           print(req.body);

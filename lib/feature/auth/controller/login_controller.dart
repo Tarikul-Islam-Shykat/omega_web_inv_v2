@@ -1,22 +1,76 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:omega_web_inv/route/route.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/global_widegts/app_snackbar.dart';
+import '../../../core/repository/network_caller/endpoints.dart';
+import '../../../core/repository/network_caller/network_config.dart';
+import '../../../core/repository/services_class/local_service/local_servies.dart';
 
 class LoginController extends GetxController {
   final TextEditingController emailTEController = TextEditingController();
   final TextEditingController passwordTEController = TextEditingController();
 
-  var isPasswordVisible = false.obs; // Password hidden by default
-  var isLoginLoading = false.obs; // Loader for login button
-  var isLoading = false.obs; // General loading (e.g., Google Sign-In, OTP)
-  late SharedPreferences _prefs; // Cached SharedPreferences instance
+  var isPasswordVisible = false.obs; 
+  var isLoginLoading = false.obs;
+  var isLoading = false.obs;
+  late SharedPreferences _prefs; 
 
   @override
   void onInit() {
     super.onInit();
     _initPrefs();
     _prefillEmail();
+  }
+  final NetworkConfig _networkConfig = NetworkConfig();
+
+
+
+  Future<bool> loginUser()async{
+    if (emailTEController.text.isEmpty ||
+        passwordTEController.text.isEmpty) {
+      AppSnackbar.show(message: 'Please fill all fields', isSuccess: false);
+      return false;
+    }
+    try{
+      isLoginLoading.value = true;
+      String email = emailTEController.text;
+      String password = passwordTEController.text;
+      final Map<String, dynamic> requestBody = {
+        "email": email,
+        "password": password,
+      };
+      log(requestBody.toString());
+      final response = await _networkConfig.ApiRequestHandler(
+        RequestMethod.POST,
+        Urls.login,
+        json.encode(requestBody),
+        is_auth: false,
+      );
+      if (response != null && response['success'] == true) {
+        var  localService =  LocalService();
+        await   localService.setToken( response["data"]["token"]);
+        var token = await localService.getToken();
+        log("response ----$response");
+        log("token ----$token");
+        Get.offNamed(AppRoute.subscriptionScreen);
+        AppSnackbar.show(message: "Login Successful", isSuccess: true);
+        return true;
+      } else {
+        AppSnackbar.show(message: "Failed To Login", isSuccess: false);
+        return false;
+      }
+    }catch(e){
+      AppSnackbar.show(message: "Failed To Login $e", isSuccess: false);
+      return false;
+    }finally{
+      isLoginLoading.value= false;
+    }
   }
 
   Future<void> _initPrefs() async {

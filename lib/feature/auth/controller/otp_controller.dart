@@ -14,6 +14,7 @@ class OTPController extends GetxController {
     errorMessage.value = ''; // Clear error on new input
   }
 
+
   Future<void> verifyOTP({
     required String email,
     required bool isForSignUp,

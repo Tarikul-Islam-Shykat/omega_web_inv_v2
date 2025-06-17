@@ -105,18 +105,9 @@ class LoginScreen extends StatelessWidget {
                     hintText: '*********',
                     bacgroundColor: Color(0xFFFFFFFF).withValues(alpha: 0.18),
                     fillColor: Color(0xFFFFFFFF).withValues(alpha: 0.18),
-                    // validator: _passwordValidator,
                     obscureText: controller.isPasswordVisible.value,
                     width: screenWidth,
-                    // suffixIcon: IconButton(
-                    //   icon: Icon(
-                    //     controller.isPasswordVisible.value
-                    //         ? Icons.visibility_off
-                    //         : Icons.visibility,
-                    //     color: const Color(0xFF4A4F5E),
-                    //   ),
-                    //   onPressed: controller.togglePasswordVisibility,
-                    // ),
+
                   );
                 }),
                 SizedBox(height: 10.h),
@@ -144,10 +135,7 @@ class LoginScreen extends StatelessWidget {
                   return controller.isLoginLoading.value
                       ? loader()
                       : CustomButton(
-                        onPressed: () {
-                          Get.to(() => SubscriptionPlan());
-                          // controller.loginUser();
-                        },
+                        onPressed: () =>controller.loginUser(),
                         text: 'Login',
                         textColor: Colors.white,
                         backgroundColor: const Color(0xFFFB4958),

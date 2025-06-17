@@ -102,14 +102,14 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   child: Column(
                     children: [
-                      Text(
+                      widget.isForSignUp? Text(
                         'OTP Verification Code',
                         style: TextStyle(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
                           color: const Color(0xFFFB4958),
                         ),
-                      ),
+                      ):Center(child: Text("workin"),),
                       SizedBox(height: 40.h),
 
                       Center(

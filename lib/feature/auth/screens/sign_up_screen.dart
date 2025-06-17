@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_text_field.dart';
 import '../controller/signup_controller.dart';
-import 'otp_very_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   final SignupController controller = Get.put(SignupController());
@@ -151,9 +150,7 @@ class SignUpScreen extends StatelessWidget {
                   SizedBox(height: 30.h),
 
                   // Sign Up Button
-                  Obx(
-                    () =>
-                        controller.isLoading.value
+                  Obx(() => controller.isLoading.value
                             ? Center(
                               child: SpinKitWave(color: Color(0xFFFB4958)),
                             )
@@ -162,21 +159,7 @@ class SignUpScreen extends StatelessWidget {
                               height: 40.h,
                               child: ElevatedButton(
                                 // onPressed: controller.registerUser,
-                                onPressed: () {
-                                  Get.to(
-                                    () => OTPVerificationScreen(
-                                      email: controller.emailController.text,
-                                      isForSignUp: true,
-                                    ),
-                                  );
-                                  Get.snackbar(
-                                    'Great Work!',
-                                    'Sign Up Successfully!',
-                                    backgroundColor: Colors.green,
-                                    colorText: Colors.white,
-                                    snackPosition: SnackPosition.TOP,
-                                  );
-                                },
+                                onPressed: ()=> controller.userSignUp(),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFFFB4958),
                                   shape: RoundedRectangleBorder(
