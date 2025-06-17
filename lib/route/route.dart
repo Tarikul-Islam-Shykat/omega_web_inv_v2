@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 import 'package:omega_web_inv/feature/auth/screens/sign_up_screen.dart';
-import '../feature/Auth/screens/forget_pasword_screen.dart';
+import '../feature/Auth/screens/find_account_screen.dart';
+import '../feature/Auth/screens/forget_pass_otp_verification.dart';
 import '../feature/Auth/screens/login_screen.dart';
 import '../feature/Auth/screens/otp_very_screen.dart';
+import '../feature/Auth/screens/reset_pasword_screen.dart';
 import '../feature/splash_screen/screen/splash_screen.dart';
 import '../feature/user/subscription/view/user_subscription_plan.dart';
 
@@ -11,7 +13,9 @@ class AppRoute {
   static String loginScreen = "/loginScreen";
   static String signUpScreen = "/signUpScreen";
   static String otpVerifyScreen = "/otpVerifyScreen";
+
   static String forgetScreen = "/forgetScreen";
+  static String forgetOTPScreen = "/forgetOTPScreen";
   static String resetPassScreen = "/resetPassScreen";
   static String businessProfile = "/businessProfile";
   static String consumerProfile = "/consumerProfile";
@@ -23,7 +27,9 @@ class AppRoute {
   static String getLoginScreen() => loginScreen;
   static String getSignUpScreen() => signUpScreen;
   static String getOTPVerifyScreen() => otpVerifyScreen;
+
   static String getForgetScreen() => forgetScreen;
+  static String getForgetOTPScreen() => forgetOTPScreen;
   static String getResetPassScreen() => resetPassScreen;
 
   static String getSubscriptionScreen() => subscriptionScreen;
@@ -33,7 +39,11 @@ class AppRoute {
     GetPage(name: loginScreen, page: () => LoginScreen()),
     GetPage(name: signUpScreen, page: () => SignUpScreen()),
     GetPage(name: otpVerifyScreen, page: () => OTPVerificationScreen()),
-    GetPage(name: forgetScreen, page: () => ForgetPasswordScreen()),
+
+    GetPage(name: forgetScreen, page: () => FindAccountScreen()),
+    GetPage(name: forgetOTPScreen, page: () => ForgetPassOtpVerification()),
+
+
 
 
     GetPage(name: subscriptionScreen, page: () => SubscriptionPlan()),

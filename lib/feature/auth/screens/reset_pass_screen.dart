@@ -5,42 +5,25 @@ import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_button.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_text_field.dart';
 import 'package:omega_web_inv/feature/Auth/screens/utils/show_success_dialog.dart';
+import '../../../route/route.dart';
+import '../controller/reset_pass_controller.dart';
 
-import '../controller/forget_pasword_controller.dart';
-import 'login_screen.dart';
 
-class ForgetPasswordScreen extends StatelessWidget {
-  ForgetPasswordScreen({super.key});
+class ResetPasswordScreen extends StatelessWidget {
+  ResetPasswordScreen({super.key});
 
-  final ForgetPasswordController controller = Get.put(
-    ForgetPasswordController(),
-  );
+  final ResetPasswordController controller = Get.put(ResetPasswordController());
+   final String? email = Get.arguments['email']??'';
 
   void _submit(BuildContext context) {
-    // Optional validation (if needed)
-    // final newPassword = controller.passwordController.text.trim();
-    // final confirmPassword = confirmPasswordController.text.trim();
-
-    // if (newPassword.isEmpty || confirmPassword.isEmpty) {
-    //   Get.snackbar('Input Required', 'Please fill out all fields!',
-    //     backgroundColor: Colors.red, colorText: Colors.white);
-    //   return;
-    // }
-
-    // if (newPassword != confirmPassword) {
-    //   Get.snackbar('Mismatch', 'Passwords do not match!',
-    //     backgroundColor: Colors.red, colorText: Colors.white);
-    //   return;
-    // }
-
-    showSuccessDialog(
+       showSuccessDialog(
       buttonText: 'Continue',
       context: context,
       title: 'Success',
       message: 'Your Validation was successful!',
       image: Image.asset('assets/images/tick.png', height: 70.h, width: 70.w),
       onDonePressed: () {
-        Get.off(() => LoginScreen());
+        Get.offNamed(AppRoute.loginScreen);
         Get.snackbar(
           backgroundColor: Colors.green,
           colorText: Colors.white,
@@ -96,19 +79,19 @@ class ForgetPasswordScreen extends StatelessWidget {
                 SizedBox(height: 10.h),
                 Obx(() {
                   return CustomTextField(
-                    textEditingController: controller.passwordController,
+                    textEditingController:controller.newPassTEC.value,
                     hintText: '*********',
-                    obscureText: !controller.isPasswordVisible.value,
+                    obscureText: !controller.isShowPassword.value,
                     fillColor: const Color(0xFFFFFFFF).withAlpha(30),
-                    // suffixIcon: IconButton(
-                    //   icon: Icon(
-                    //     controller.isPasswordVisible.value
-                    //         ? Icons.visibility_off
-                    //         : Icons.visibility,
-                    //     color: const Color(0xFF4A4F5E),
-                    //   ),
-                    //   onPressed: controller.togglePasswordVisibility,
-                    // ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.isShowPassword.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: const Color(0xFF4A4F5E),
+                      ),
+                      onPressed:()=> controller.onShowingPassword(),
+                    ),
                   );
                 }),
                 SizedBox(height: 20.h),
@@ -131,30 +114,33 @@ class ForgetPasswordScreen extends StatelessWidget {
                 SizedBox(height: 10.h),
                 Obx(() {
                   return CustomTextField(
-                    textEditingController: controller.confirmPasswordController,
+                    textEditingController: controller.conPassTEC.value,
                     hintText: '*********',
-                    obscureText: !controller.isConfirmPasswordVisible.value,
+                    obscureText: !controller.isShowPassword.value,
                     fillColor: const Color(0xFFFFFFFF).withAlpha(30),
-                    // suffixIcon: IconButton(
-                    //   icon: Icon(
-                    //     controller.isConfirmPasswordVisible.value
-                    //         ? Icons.visibility_off
-                    //         : Icons.visibility,
-                    //     color: const Color(0xFF4A4F5E),
-                    //   ),
-                    //   onPressed: controller.toggleConfirmPasswordVisibility,
-                    // ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.isShowPassword.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: const Color(0xFF4A4F5E),
+                      ),
+                      onPressed:()=> controller.onShowingPassword(),
+                    ),
                   );
                 }),
                 SizedBox(height: 40.h),
 
                 // Submit Button or Loader
                 Obx(() {
-                  return controller.isLoginLoading.value
+                  return controller.isLoading.value
                       ? loader()
                       : CustomButton(
-                        onPressed: () => _submit(context),
-                        text: 'Login',
+                        onPressed: (){
+                          controller.resetPassword(email.toString());
+                          _submit(context);
+                        } ,
+                        text: 'Save',
                         textColor: Colors.white,
                         backgroundColor: const Color(0xFFFB4958),
                         width: 0.9.sw,

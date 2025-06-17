@@ -5,9 +5,8 @@ import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_button.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_text_field.dart';
 import 'package:omega_web_inv/feature/Auth/screens/sign_up_screen.dart';
-import '../../user/subscription/view/user_subscription_plan.dart';
+import 'package:omega_web_inv/route/route.dart';
 import '../controller/login_controller.dart';
-import 'find_account_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -116,9 +115,7 @@ class LoginScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
-                    onPressed: () {
-                      Get.to(() => FindAccountScreen());
-                    },
+                    onPressed: ()=>Get.toNamed(AppRoute.forgetScreen),
                     child: Text(
                       'Forgot password?',
                       style: TextStyle(

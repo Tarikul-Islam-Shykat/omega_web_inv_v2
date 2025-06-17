@@ -1,46 +1,19 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_button.dart';
 import 'package:pinput/pinput.dart';
 import 'package:get/get.dart';
+import '../controller/forget_pasword_controller.dart';
 
-import '../controller/login_controller.dart';
-import 'forget_pasword_screen.dart';
 
-class ForgetPassOtpVerification extends StatefulWidget {
-  final String? email;
+class ForgetPassOtpVerification extends StatelessWidget {
+   ForgetPassOtpVerification({super.key,});
+   final ForgetPasswordController controller = Get.put(ForgetPasswordController());
+   final String? email = Get.arguments['email']??"";
 
-  const ForgetPassOtpVerification({super.key, this.email});
-
-  @override
-  _ForgetPassOtpVerificationState createState() =>
-      _ForgetPassOtpVerificationState();
-}
-
-class _ForgetPassOtpVerificationState extends State<ForgetPassOtpVerification> {
-  final _otpController = TextEditingController();
-  final controller = Get.put(LoginController());
-
-  final defaultPinTheme = PinTheme(
-    width: 56,
-    height: 56,
-    textStyle: TextStyle(fontSize: 22.sp, color: Color(0xFFFB4958)),
-    decoration: BoxDecoration(
-      color: Color(0xFFFFFFFF).withAlpha(40),
-      // border: Border.all(
-      //   color: Color(
-      //     0xFF1F3892,
-      //   ).withAlpha(128),
-      //   width: 1,
-      // ),
-      borderRadius: BorderRadius.circular(12.r),
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +50,7 @@ class _ForgetPassOtpVerificationState extends State<ForgetPassOtpVerification> {
 
                       Center(
                         child: Text(
-                          'Code has been sent to ${widget.email}',
+                          'Code has been sent to ${email.toString()}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12.sp,
@@ -91,9 +64,9 @@ class _ForgetPassOtpVerificationState extends State<ForgetPassOtpVerification> {
                         padding: const EdgeInsets.all(16.0),
                         child: Pinput(
                           closeKeyboardWhenCompleted: true,
-                          controller: _otpController,
+                          controller:controller.otpController.value,
                           length: 4,
-                          defaultPinTheme: defaultPinTheme,
+                          defaultPinTheme: controller.defaultPinTheme,
                           onCompleted: (pin) {
                             if (kDebugMode) {
                               log('OTP entered: $pin');
@@ -102,25 +75,24 @@ class _ForgetPassOtpVerificationState extends State<ForgetPassOtpVerification> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.03),
-                      CustomButton(
-                        width: screenWidth * 0.9,
-                        height: 40.h,
-                        borderRadius: 10.r,
-                        backgroundColor: Color(0xFFFB4958),
-                        text: 'Verification',
-                        onPressed: () {
-                          Get.to(() => ForgetPasswordScreen());
-                          Get.snackbar(
-                            'Congratulations!',
-                            'Please setup new password!',
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
+
+                      Obx((){
+                          return controller.isLoading.value?loader():CustomButton(
+                            width: screenWidth * 0.9,
+                            height: 40.h,
+                            borderRadius: 10.r,
+                            backgroundColor: Color(0xFFFB4958),
+                            text: 'Verification',
+                            onPressed: () {
+                              controller.verifyOtp(email.toString());
+
+                            },
                           );
-                        },
+                        }
                       ),
 
                       // ElevatedButton(
-
+                      //
                       //   onPressed: () async {
                       //     // Commented out validation and API call
                       //     /*
@@ -129,7 +101,7 @@ class _ForgetPassOtpVerificationState extends State<ForgetPassOtpVerification> {
                       //   otp: _otpController.text,
                       //   isForSignUp: widget.isForSignUp,
                       // );
-
+                      //
                       // if (widget.isForSignUp) {
                       //   Get.to(() => SubscriptionPlanScreen());
                       // } else {
@@ -143,7 +115,7 @@ class _ForgetPassOtpVerificationState extends State<ForgetPassOtpVerification> {
                       //     }
                       //   },
                       //   style: ElevatedButton.styleFrom(
-
+                      //
                       //     backgroundColor: const Color(0xFFFB4958),
                       //     padding: EdgeInsets.symmetric(
                       //       horizontal: 50,
@@ -159,6 +131,49 @@ class _ForgetPassOtpVerificationState extends State<ForgetPassOtpVerification> {
                       //   ),
                       // ),
                       SizedBox(height: 30.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Didn’t get the otp',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          SizedBox(width: 3.w),
+
+                          Obx(() => GestureDetector(
+                            onTap: controller.isLoading.value
+                                ? null
+                                : () {
+                              if (email != null && email!.isNotEmpty) {
+                                controller.resendOtp(email.toString());
+                              } else {
+                                Get.snackbar("Error", "Email missing");
+                              }
+                            },
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                Text(
+                                  controller.isLoading.value ? "Sending..." : "Resend",
+                                  style: TextStyle(
+                                    color: Color(0xFFFB4958),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: -2,
+                                  child: Container(
+                                    width: 45,
+                                    height: 1.5,
+                                    color: Color(0xFFFB4958),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                        ],
+                      ),
+
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
