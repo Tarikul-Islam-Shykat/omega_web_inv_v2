@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:omega_web_inv/User/Auth/screens/forget_pasword_screen.dart';
-import 'package:omega_web_inv/User/Auth/screens/login_screen.dart';
-import 'package:omega_web_inv/splash_screen/screen/splash_screen.dart';
+import '../feature/Auth/screens/forget_pasword_screen.dart';
+import '../feature/Auth/screens/login_screen.dart';
+import '../feature/splash_screen/screen/splash_screen.dart';
 
 class AppRoute {
   static String splashScreen = '/splashScreen';

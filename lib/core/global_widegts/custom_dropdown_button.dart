@@ -2,7 +2,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:omega_web_inv/User/Views/features/Home/controller/custom_dropdown_controller.dart';
+
+import '../../feature/user/home/controller/custom_dropdown_controller.dart';
 
 class CustomDropDown extends StatelessWidget {
   final double width;
