@@ -37,7 +37,7 @@ class NetworkConfig {
       } else if (method.name == RequestMethod.POST.name) {
         try {
           var req = await http.post(Uri.parse(url),
-              // headers: header,
+              headers: header,
               body: json_body);
 
           print(req.body);
@@ -60,7 +60,8 @@ class NetworkConfig {
           if (req.statusCode == 200) {
             return json.decode(req.body);
           } else {
-            throw Exception("Server Error");
+            return json.decode(req.body);
+            //throw Exception("Server Error");
           }
         } catch (e) {
           ShowError(e);

@@ -21,6 +21,7 @@ import 'package:prettyrini/feature/auth/screen/reset_password.dart';
 import 'package:prettyrini/feature/auth/screen/sign_up_screen.dart';
 import 'package:prettyrini/feature/dashboard/ui/product_home_screen.dart';
 import 'package:prettyrini/feature/post/ui/post_ui.dart';
+import 'package:prettyrini/feature/splash_screen/screen/splash_screen.dart';
 import 'package:prettyrini/feature/subscription_page/view/subscription_screen.dart';
 import 'package:prettyrini/feature/welome/view/welcome_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,7 +67,8 @@ class MyApp extends StatelessWidget {
         // builder: EasyLoading.init(),
 
         // ! screens for progress
-        home: DashboardScreen(),
+        //home: LoginScreen(),
+        home:LoginScreen(),
         //  home: UserProfilePage(),
         // home: ManagePlanPage(),
         // home: SelectFormatPage(),

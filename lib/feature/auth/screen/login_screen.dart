@@ -9,6 +9,7 @@ import 'package:prettyrini/feature/auth/widget/text_field_widget.dart';
 
 import '../../../core/const/app_colors.dart';
 import '../../../core/const/image_path.dart';
+import '../../../route/route.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -94,33 +95,36 @@ class LoginScreen extends StatelessWidget {
           ),
 
           // Bottom buttons
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Don’t have an account? ',
-                        style: GoogleFonts.poppins(
-                          fontSize: 15.sp,
-                          color: Colors.white,
-                        ).copyWith(decoration: TextDecoration.underline),
-                      ),
-                      Text(
-                        'Sign Up',
-                        style: GoogleFonts.poppins(
-                          fontSize: 15.sp,
-                          color: AppColors.primaryColor,
-                        ).copyWith(decoration: TextDecoration.underline),
-                      ),
-                    ],
-                  )
-                ],
+          InkWell(
+            onTap: ()=>Get.toNamed(AppRoute.signUpScreen),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Don’t have an account? ',
+                          style: GoogleFonts.poppins(
+                            fontSize: 15.sp,
+                            color: Colors.white,
+                          ).copyWith(decoration: TextDecoration.underline),
+                        ),
+                        Text(
+                          'Sign Up',
+                          style: GoogleFonts.poppins(
+                            fontSize: 15.sp,
+                            color: AppColors.primaryColor,
+                          ).copyWith(decoration: TextDecoration.underline),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
