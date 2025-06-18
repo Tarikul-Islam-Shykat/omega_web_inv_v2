@@ -21,7 +21,7 @@ final NetworkConfig _networkConfig = NetworkConfig();
       isLoading.value = true;
       final Map<String, dynamic> requestBody = {
         "email":email.toString(),
-        "otp":otpController.value.text,
+        "otp":int.parse(otpController.value.text),
       };
       final response = await _networkConfig.ApiRequestHandler(
         RequestMethod.POST,

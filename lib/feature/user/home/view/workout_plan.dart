@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use
 
 import 'dart:developer';
 import 'package:flutter/material.dart';
@@ -7,40 +6,19 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_app_bar.dart';
+import 'package:omega_web_inv/core/repository/services_class/video_controller.dart';
+import 'package:video_player/video_player.dart';
 
+import '../../../../core/global_widegts/app_network_image.dart';
 import '../controller/workout_plan_controller.dart';
 
 class WorkoutPlan extends StatelessWidget {
   WorkoutPlan({super.key});
 
   final WorkoutPlanController controller = Get.put(WorkoutPlanController());
+  final videoController =Get.put(VideoController());
 
-  final List<Map<String, String>> exerciseList = [
-    {
-      'time': '10 min',
-      'kcal': '140',
-      'imagePath': 'assets/images/workout1.png',
-      'centerImagePath': 'assets/images/user.png',
-      'exerciseId': 'exercise_1',
-      'title': 'Barbell squat 10 Minutes (140)',
-    },
-    {
-      'time': '5 min',
-      'kcal': '210',
-      'imagePath': 'assets/images/workout2.png',
-      'centerImagePath': 'assets/images/user.png',
-      'exerciseId': 'exercise_2',
-      'title': 'Mountain Climbers 5 Minutes (210)',
-    },
-    {
-      'time': '10 min',
-      'kcal': '200',
-      'imagePath': 'assets/images/workout1.png',
-      'centerImagePath': 'assets/images/user.png',
-      'exerciseId': 'exercise_3',
-      'title': 'Pushups 10 reps (200)',
-    },
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,9 +70,9 @@ class WorkoutPlan extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 12.h),
                       child: _exerciseCard(
                         time:data!.duration.toString(),
-                        kcal: data.kcal.toString()!,
+                        kcal: data.kcal.toString(),
                         imagePath: data.thumbnail.toString(),
-                        centerImagePath: data.video.toString()!,
+                        centerImagePath: data.video.toString(),
                         exerciseId: data.id!,
                         title:data.title!,
                       ),
@@ -155,12 +133,15 @@ class WorkoutPlan extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
               child: Row(
                 children: [
-                  Image.asset(
-                    centerImagePath,
-                    width: 60.w,
-                    height: 60.h,
-                    fit: BoxFit.contain,
-                  ),
+                  AspectRatio(aspectRatio: videoController.videoController.value.aspectRatio,
+                  child: VideoPlayer(videoController.initializeVideo(centerImagePath)),),
+                  //ResponsiveNetworkImage(imageUrl:centerImagePath,heightPercent: .05.h,widthPercent: .12.w,),
+                  // Image.asset(
+                  //   centerImagePath,
+                  //   width: 60.w,
+                  //   height: 60.h,
+                  //   fit: BoxFit.contain,
+                  // ),
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
@@ -312,7 +293,7 @@ class WorkoutPlan extends StatelessWidget {
                       time,
                       style: TextStyle(color: Colors.white, fontSize: 12.sp),
                     ),
-                    SizedBox(width: 8.w),
+                    SizedBox(width: 6.w),
                     Icon(
                       Icons.local_fire_department,
                       size: 14.sp,
