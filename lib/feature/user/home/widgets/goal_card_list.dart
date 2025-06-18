@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../../feature/Auth/controller/user_info_setup_controller.dart';
+import '../../profile/controller/user_info_setup_controller.dart';
 import 'goal_card.dart';
 
 class GoalCardsList extends StatelessWidget {

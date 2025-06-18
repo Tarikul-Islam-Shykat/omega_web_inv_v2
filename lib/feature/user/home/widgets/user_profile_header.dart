@@ -3,14 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../../feature/Auth/controller/user_info_setup_controller.dart';
+import 'package:omega_web_inv/feature/user/profile/controller/get_user_controller.dart';
+import '../../../../core/global_widegts/app_network_image.dart';
 import '../../chat/chatbox/chat_list.dart';
 import '../../notification/view/notification_screen.dart';
 import '../../profile/view/user_profile_screen.dart';
 
 class UserProfileHeader extends StatelessWidget {
-  final UserInfoSetupController controller =
-      Get.find<UserInfoSetupController>();
+ // final UserInfoSetupController controller = Get.find<UserInfoSetupController>();
+  final GetUserController userController = Get.put(GetUserController());
   final bool showBackButton;
   final bool showGreetingPrefix;
   final String? subtitleText;
@@ -38,9 +39,15 @@ class UserProfileHeader extends StatelessWidget {
           bottomLeft: Radius.circular(12.r),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [_buildUserInfoSection(), _buildActionIcons()],
+      child: Obx((){
+        if(userController.isGetMeLoading.value){
+          return CircularProgressIndicator();
+        }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [_buildUserInfoSection(), _buildActionIcons()],
+          );
+        }
       ),
     );
   }
@@ -76,10 +83,10 @@ class UserProfileHeader extends StatelessWidget {
         height: 60.h,
         width: 60.w,
         child: Obx(() {
-          final image = controller.selectedImage.value;
-          return image != null
-              ? Image.file(image, fit: BoxFit.cover)
-              : Image.asset('assets/images/user.png', fit: BoxFit.cover);
+         if(userController.isLoading.value){
+           return Center(child: CircularProgressIndicator(),);
+         }
+          return ResponsiveNetworkImage(imageUrl: userController.getMeModel.value.image.toString(),);
         }),
       ),
     );
@@ -92,7 +99,7 @@ class UserProfileHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Obx(() {
-            final userName = controller.userName.value.trim();
+            final userName = userController.getMeModel.value.fullName.toString();
             String greetingText;
 
             if (showGreetingPrefix) {
@@ -143,7 +150,7 @@ class UserProfileHeader extends StatelessWidget {
             icon: Icons.notifications_none,
             tooltip: 'Notifications',
             onPressed: () {
-              Get.to(() => NotificationScreen());
+              Get.to(() =>NotificationScreen());
             },
             // _showSnackbar('Notifications', 'Opening notifications...'),
           ),

@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:omega_web_inv/feature/user/home/view/workout_plan.dart';
 import '../../nutrition/nutrition_page.dart';
+import '../../profile/controller/get_user_controller.dart';
 import '../../workouts/workout_page.dart';
 import '../controller/goal_controller.dart';
 import '../widgets/exercise_library.dart';
@@ -18,6 +19,7 @@ class HomeContent extends StatelessWidget {
   HomeContent({super.key});
 
   final controller = Get.put(GoalController());
+  final userController = Get.put(GetUserController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class HomeContent extends StatelessWidget {
             children: [
               // Header
               UserProfileHeader(),
+
               SizedBox(height: 24.h),
 
               // Date
@@ -307,7 +310,7 @@ class HomeContent extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   if (title.contains("Workout Plans")) {
-                    Get.to(() => WorkoutPlan(calorieCount: calorieCount));
+                    Get.to(() => WorkoutPlan());
                     log(
                       'Navigating to WorkoutPlan with calories: $calorieCount',
                     );

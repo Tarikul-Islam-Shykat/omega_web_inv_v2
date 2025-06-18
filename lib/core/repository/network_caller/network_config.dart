@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, constant_identifier_names, non_constant_identifier_names, avoid_print
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,29 +19,34 @@ class NetworkConfig {
     if (await InternetConnectionChecker().hasConnection) {
       var header = <String, String>{"Content-type": "application/json"};
       if (is_auth == true) {
-        header["Authorization"] = "Bearer ${sh.getString("token")}";
+        header["Authorization"] = "${sh.getString("token")}";
       }
 
       if (method.name == RequestMethod.GET.name) {
         try {
           var req = await http.get(Uri.parse(url), headers: header);
 
-          print(req.statusCode);
+          debugPrint("STATUS CODE :${req.statusCode}");
+          debugPrint("TOKEN :${sh.getString("token")}");
+          debugPrint("RESPONSE BODY : ${jsonDecode(req.body)}");
           if (req.statusCode == 200) {
             return json.decode(req.body);
           } else {
             throw Exception("Server Error");
+            
           }
         } catch (e) {
           ShowError(e);
+          log("Failed e ${e.toString()}");
         }
       } else if (method.name == RequestMethod.POST.name) {
         try {
-          var req = await http.post(Uri.parse(url),
-              headers: header,
-              body: json_body);
+          var req =
+          await http.post(Uri.parse(url), headers: header, body: json_body);
 
-          print(req.body);
+          debugPrint("STATUS CODE :${req.statusCode}");
+          debugPrint("TOKEN :${sh.getString("token")}");
+          debugPrint("RESPONSE BODY : ${jsonDecode(req.body)}");
           if (req.statusCode == 200) {
             return json.decode(req.body);
           } else if (req.statusCode == 500) {
@@ -50,13 +56,19 @@ class NetworkConfig {
           }
         } catch (e) {
           ShowError(e);
+          return {
+            "success": false,
+            "message": "Something went wrong: ${e.toString()}",
+          };
         }
-      } else if (method.name == RequestMethod.PUT.name) {
+      }else if (method.name == RequestMethod.PUT.name) {
         try {
           var req =
               await http.put(Uri.parse(url), headers: header, body: json_body);
 
-          print(req.statusCode);
+          debugPrint("STATUS CODE :${req.statusCode}");
+          debugPrint("TOKEN :${sh.getString("token")}");
+          debugPrint("RESPONSE BODY : ${jsonDecode(req.body)}");
           if (req.statusCode == 200) {
             return json.decode(req.body);
           } else {
@@ -69,8 +81,9 @@ class NetworkConfig {
         try {
           var req = await http.delete(Uri.parse(url), headers: header);
 
-          print(req.statusCode);
-          print(req);
+          debugPrint("STATUS CODE :${req.statusCode}");
+          debugPrint("TOKEN :${sh.getString("token")}");
+          debugPrint("RESPONSE BODY : ${jsonDecode(req.body)}");
           if (req.statusCode == 200) {
             return json.decode(req.body);
           } else {

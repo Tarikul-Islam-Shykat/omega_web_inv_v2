@@ -6,12 +6,12 @@ import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_button.dart';
 import 'package:pinput/pinput.dart';
 import 'package:get/get.dart';
-import '../controller/forget_pasword_controller.dart';
+import '../controller/otp_verify_controller.dart';
 
 
 class ForgetPassOtpVerification extends StatelessWidget {
    ForgetPassOtpVerification({super.key,});
-   final ForgetPasswordController controller = Get.put(ForgetPasswordController());
+   final OTPVerifyController controller = Get.put(OTPVerifyController());
    final String? email = Get.arguments['email']??"";
 
 
@@ -91,51 +91,12 @@ class ForgetPassOtpVerification extends StatelessWidget {
                         }
                       ),
 
-                      // ElevatedButton(
-                      //
-                      //   onPressed: () async {
-                      //     // Commented out validation and API call
-                      //     /*
-                      // await controller.verifyOTP(
-                      //   email: widget.email ?? '',
-                      //   otp: _otpController.text,
-                      //   isForSignUp: widget.isForSignUp,
-                      // );
-                      //
-                      // if (widget.isForSignUp) {
-                      //   Get.to(() => SubscriptionPlanScreen());
-                      // } else {
-                      //   Get.to(() => ResetPasswordScreen(email: widget.email ?? ''));
-                      // }
-                      // */
-                      //     if (kDebugMode) {
-                      //       log(
-                      //         'Verification button pressed with OTP: ${_otpController.text}',
-                      //       );
-                      //     }
-                      //   },
-                      //   style: ElevatedButton.styleFrom(
-                      //
-                      //     backgroundColor: const Color(0xFFFB4958),
-                      //     padding: EdgeInsets.symmetric(
-                      //       horizontal: 50,
-                      //       vertical: 15,
-                      //     ),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(10.r),
-                      //     ),
-                      //   ),
-                      //   child: Text(
-                      //     'Verification',
-                      //     style: TextStyle(color: Colors.white),
-                      //   ),
-                      // ),
                       SizedBox(height: 30.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            'Didn’t get the otp',
+                            'Didn’t get the OTP',
                             style: TextStyle(color: Colors.white),
                           ),
                           SizedBox(width: 3.w),
@@ -173,64 +134,6 @@ class ForgetPassOtpVerification extends StatelessWidget {
                           )),
                         ],
                       ),
-
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Didn’t get the otp',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          SizedBox(width: 3.w),
-                          Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              Text(
-                                'Resend',
-                                style: TextStyle(
-                                  color: Color(0xFFFB4958),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: -2,
-                                child: Container(
-                                  width: 45,
-                                  height: 1.5,
-                                  color: Color(0xFFFB4958),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-
-                      // GestureDetector(
-                      //   onTap: () {},
-                      //   // email == null
-                      //   //     ? null
-                      //   //     : () => controller.resendOTP(email!),
-                      //   child: RichText(
-                      //     text: TextSpan(
-                      //       text: 'Didn\'t receive the code? ',
-                      //       style: TextStyle(
-                      //         fontSize: 14.sp,
-                      //         color: const Color(0xFFFFFFFF),
-                      //       ),
-                      //       children: [
-                      //         TextSpan(
-                      //           text: 'Resend',
-                      //           style: TextStyle(
-                      //             fontSize: 14.sp,
-                      //             color: const Color(0xFFFB4958),
-                      //             fontWeight: FontWeight.bold,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

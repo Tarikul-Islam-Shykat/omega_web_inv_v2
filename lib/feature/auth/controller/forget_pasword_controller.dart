@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,28 +22,34 @@ class ForgetPasswordController extends GetxController {
     }
     try{
       isLoading.value = true;
+      final Map<String, dynamic> requestBody = {
+        "email": emailController.value.text.trim(),
+      };
+      log("email :$requestBody");
       final response = await _networkConfig.ApiRequestHandler(
         RequestMethod.POST,
         Urls.forgotPass,
-          {
-            "email":emailController.value.text,
-          },
+        json.encode(requestBody),
         is_auth: false,
       );
+
+      log("response body :${response?.toString() ?? 'null'}");
       if(response != null && response['success']== true){
         AppSnackbar.show(message: "${response['message']}", isSuccess: true);
         Get.toNamed(
           arguments: {
             'email':emailController.value.text,
           },
-            AppRoute.otpVerifyScreen);
+            AppRoute.forgetOTPScreen);
         return true;
       }else{
         AppSnackbar.show(message: "${response['message']}", isSuccess: false);
+        log("failed -----${response['message']}");
         return false;
       }
     }catch(e){
       AppSnackbar.show(message: "Failed To Send Opt$e", isSuccess: false);
+      log("failed catch-----$e");
       return false;
     }finally{
       isLoading.value = false;
@@ -50,88 +57,7 @@ class ForgetPasswordController extends GetxController {
   }
 
 
-  //verify otp
-  Future<bool> verifyOtp(String email)async{
-    
-    try{
-      isLoading.value = true;
-      final response = await _networkConfig.ApiRequestHandler(
-          RequestMethod.POST,
-          Urls.otpVerify,
-          {
-            "email":email.toString(),
-            "otp":otpController.value.text,
-          },
-        is_auth: false,
-      );
-      log("response body $response");
-      if(response != null && response['success']== true){
-        AppSnackbar.show(message: "${response['message']}", isSuccess: true);
-        Get.offNamed(
-          arguments: {
-            'email':email.toString(),
-          },
-            AppRoute.resetPassScreen);
-        return true;
-      }else{
-        AppSnackbar.show(message: "${response['message']}", isSuccess: false);
-        return false;
-      }
-      
-    }catch(e){
-      AppSnackbar.show(message: "OTP Failed $e", isSuccess: false);
-      return false;
-    }finally{
-      isLoading.value = false;
-    }
-  }
 
-
-  //resend otp
-  Future<bool> resendOtp(String email)async{
-
-    try{
-      isLoading.value = true;
-      final response = await _networkConfig.ApiRequestHandler(
-        RequestMethod.POST,
-        Urls.resendOTP,
-        {
-          "email":email.toString(),
-        },
-        is_auth: false,
-      );
-      log("response body $response");
-      if(response != null && response['success']== true){
-        AppSnackbar.show(message: "${response['message']}", isSuccess: true);
-        return true;
-      }else{
-        AppSnackbar.show(message: "${response['message']}", isSuccess: false);
-        return false;
-      }
-
-    }catch(e){
-      AppSnackbar.show(message: "Resend OTP Failed $e", isSuccess: false);
-      return false;
-    }finally{
-      isLoading.value = false;
-    }
-  }
-
-  final defaultPinTheme = PinTheme(
-    width: 56,
-    height: 56,
-    textStyle: TextStyle(fontSize: 22.sp, color: Color(0xFFFB4958)),
-    decoration: BoxDecoration(
-      color: Color(0xFFFFFFFF).withAlpha(40),
-      // border: Border.all(
-      //   color: Color(
-      //     0xFF1F3892,
-      //   ).withAlpha(128),
-      //   width: 1,
-      // ),
-      borderRadius: BorderRadius.circular(12.r),
-    ),
-  );
 
 
 

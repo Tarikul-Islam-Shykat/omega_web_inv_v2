@@ -4,14 +4,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_app_bar.dart';
 
 import '../controller/workout_plan_controller.dart';
 
 class WorkoutPlan extends StatelessWidget {
-  final String calorieCount;
-
-  WorkoutPlan({super.key, required this.calorieCount});
+  WorkoutPlan({super.key});
 
   final WorkoutPlanController controller = Get.put(WorkoutPlanController());
 
@@ -44,7 +44,6 @@ class WorkoutPlan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.initializeCalories(calorieCount);
     final sw = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -77,24 +76,34 @@ class WorkoutPlan extends StatelessWidget {
             ),
 
             /// ListView.builder for exercise cards
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: exerciseList.length,
-              itemBuilder: (context, index) {
-                final exercise = exerciseList[index];
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  child: _exerciseCard(
-                    time: exercise['time']!,
-                    kcal: exercise['kcal']!,
-                    imagePath: exercise['imagePath']!,
-                    centerImagePath: exercise['centerImagePath']!,
-                    exerciseId: exercise['exerciseId']!,
-                    title: exercise['title']!,
-                  ),
+            Obx((){
+              if(controller.isGetWorkOut.value){
+                return Center(child: loader(),);
+              }else if(controller.workOutPlan.isEmpty){
+                return Center(child: Text("No Data Found",style: GoogleFonts.poppins(fontSize: 14.sp,fontWeight: FontWeight.w500,color: Colors.white),),);
+              }else{
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: controller.workOutPlan.length,
+                  itemBuilder: (context, index) {
+                    final data = controller.workOutPlan[index].workout;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: _exerciseCard(
+                        time:data!.duration.toString(),
+                        kcal: data.kcal.toString()!,
+                        imagePath: data.thumbnail.toString(),
+                        centerImagePath: data.video.toString()!,
+                        exerciseId: data.id!,
+                        title:data.title!,
+                      ),
+                    );
+                  },
                 );
-              },
+              }
+
+              }
             ),
 
             SizedBox(height: 20.h),

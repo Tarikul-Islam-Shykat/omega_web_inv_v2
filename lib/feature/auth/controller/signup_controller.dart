@@ -11,7 +11,7 @@ import 'package:omega_web_inv/core/repository/network_caller/network_config.dart
 
 import '../../../core/repository/network_caller/endpoints.dart';
 import '../../../route/route.dart';
-import '../screens/otp_very_screen.dart';
+import '../screens/email_very_screen.dart';
 
 class SignupController extends GetxController {
   final nameController = TextEditingController();

@@ -77,11 +77,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:omega_web_inv/feature/user/profile/controller/user_info_setup_controller.dart';
 import '../controller/bottom_nav_bar_controller.dart';
 import 'custom_bottom_navbar_screen.dart';
 
 class BottomNavBarScreen extends StatelessWidget {
   final BottomNavController controller = Get.put(BottomNavController());
+  final UserInfoSetupController userInfoController = Get.put(UserInfoSetupController());
 
   BottomNavBarScreen({super.key});
 

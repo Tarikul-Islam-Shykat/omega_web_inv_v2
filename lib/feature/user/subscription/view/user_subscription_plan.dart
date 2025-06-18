@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_app_bar.dart';
-import '../../../Auth/screens/user_info_setup.dart';
+import '../../profile/view/user_info_setup.dart';
 import '../controller/user_subscription_controller.dart';
 
 
