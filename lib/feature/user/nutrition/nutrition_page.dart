@@ -6,9 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 
+import '../../../core/global_widegts/app_network_image.dart';
 import '../chat/chatbox/chat_message.dart';
 import '../home/controller/goal_controller.dart';
 import '../home/controller/meal_plan_controller.dart';
+import '../home/widgets/exercise_library.dart';
+import '../home/widgets/video_card_widget.dart';
+import '../workouts/widget/card_widget.dart';
 import 'model/nutrition_model.dart';
 
 class NutritionPage extends StatelessWidget {
@@ -68,499 +72,691 @@ class NutritionPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _goalCard(sw),
-              SizedBox(height: 20.h),
-              _selectMealCard(sw),
-              SizedBox(height: 20.h),
-              CustomDropdownWithFilter(nutritions: nutritions, sw: sw),
-              SizedBox(height: 20.h),
-              Padding(
-                padding: EdgeInsets.all(16.w),
-                child: SizedBox(
-                  width: sw * 0.95,
-                  height: 40.h,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.horizontal(
-                          left: Radius.circular(16.r),
-                          right: Radius.circular(16.r),
-                        ),
-                      ),
-                      backgroundColor: Colors.redAccent,
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    onPressed: () {
-                      Get.to(
-                        () => ChatDetailScreen(contactName: 'Nutritionist'),
-                      );
-                    },
-                    child: Text(
-                      'Your Nutritionist',
-                      style: TextStyle(color: Colors.white, fontSize: 14.sp),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 120.h),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _goalCard(double sw) {
-    final GoalController goalController = Get.find();
-
-    return Obx(
-      () => _buildCard(
-        sw,
-        'Meal Goals',
-        goalController.caloriesEaten.value.split(' ')[0],
-      ),
-    );
-  }
-
-  Widget _selectMealCard(double sw) {
-    return Obx(
-      () => _buildCard(
-        sw,
-        'Select Meal',
-        '${controller.remainingCalories.value}',
-      ),
-    );
-  }
-
-  Widget _buildCard(double sw, String title, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
-      child: Container(
-        height: 60.h,
-        width: sw * 0.95,
-        decoration: BoxDecoration(
-          color: Colors.white.withAlpha(18),
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '$title ',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    color: Color(0xFFFB4958),
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  ' Kcal',
-                  style: TextStyle(
-                    color: Color(0xFFFB4958),
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomDropdownWithFilter extends StatefulWidget {
-  final List<NutritionModel> nutritions;
-  final double sw;
-
-  const CustomDropdownWithFilter({
-    super.key,
-    required this.nutritions,
-    required this.sw,
-  });
-
-  @override
-  State<CustomDropdownWithFilter> createState() =>
-      _CustomDropdownWithFilterState();
-}
-
-class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
-  bool _isDropdownOpen = false;
-  final List<String> _options = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
-  final List<bool> _selectedOptions = [false, false, false, false];
-  List<NutritionModel> _filteredNutritions = [];
-  final Set<int> _selectedIndices = {};
-  final MealPlanController controller = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-    _filteredNutritions = widget.nutritions;
-  }
-
-  void _toggleDropdown() {
-    setState(() {
-      _isDropdownOpen = !_isDropdownOpen;
-    });
-  }
-
-  void _toggleOption(int index) {
-    setState(() {
-      _selectedOptions[index] = !_selectedOptions[index];
-      _filterNutritions();
-    });
-  }
-
-  void _filterNutritions() {
-    List<String> selectedMealTimes = [];
-    for (int i = 0; i < _selectedOptions.length; i++) {
-      if (_selectedOptions[i]) {
-        selectedMealTimes.add(_options[i]);
-      }
-    }
-
-    if (selectedMealTimes.isEmpty) {
-      _filteredNutritions = widget.nutritions;
-    } else {
-      _filteredNutritions =
-          widget.nutritions.where((nutrition) {
-            return selectedMealTimes.any(
-              (time) => nutrition.title.contains(time),
-            );
-          }).toList();
-    }
-  }
-
-  void _toggleSelection(int index) {
-    setState(() {
-      if (_selectedIndices.contains(index)) {
-        _selectedIndices.remove(index);
-        controller.remainingCalories.value -=
-            _filteredNutritions[index].calories; // Fixed to subtract calories
-      } else {
-        _selectedIndices.add(index);
-        controller.remainingCalories.value +=
-            _filteredNutritions[index].calories;
-      }
-    });
-  }
-
-  Widget _nutritionCard({
-    required NutritionModel nutrition,
-    required int index,
-  }) {
-    final isSelected = _selectedIndices.contains(index);
-
-    return GestureDetector(
-      onTap: () => _toggleSelection(index),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.r),
-            color: Colors.white.withAlpha(18),
-            border:
-                isSelected
-                    ? Border.all(color: Colors.redAccent, width: 2)
-                    : null,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      nutrition.thumbnailUrl,
-                      width: 60.w,
-                      height: 60.h,
-                    ),
-                    SizedBox(width: 10.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          nutrition.title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Suggest nutrition Library',
-                      style: TextStyle(
-                        color: Color(0xFFF5838C),
-                        fontSize: 12.sp,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        log('See all tapped');
-                        // Get.to(() => NutritionLibrary());
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            'nutrition Tips',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.sp,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          Icon(Icons.arrow_right, color: Colors.white),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(child: _nutritionItem(nutrition)),
-                    Flexible(child: _nutritionItem(nutrition)),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16.h),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _nutritionItem(NutritionModel nutrition) {
-    return Container(
-      width: 130.w,
-      height: 90.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.r),
-        image: DecorationImage(
-          image: AssetImage(nutrition.imagePath),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.2),
-            BlendMode.darken,
-          ),
-        ),
-      ),
-      child: Stack(
-        alignment: Alignment.bottomLeft,
-        children: [
-          Center(
-            child: CircleAvatar(
-              backgroundColor: Colors.white.withAlpha(18),
-              child: Image.asset(
-                nutrition.centerImagePath,
-                width: 10.w,
-                height: 10.h,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(30),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              child: Row(
-                children: [
-                  Text(
-                    nutrition.quantity,
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
-                  ),
-                  SizedBox(width: 8.w),
-                  Icon(
-                    Icons.local_fire_department,
-                    size: 14.sp,
-                    color: Colors.white,
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    nutrition.kcal,
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Suggest Meals',
-                    style: TextStyle(color: Color(0xFFF5838C), fontSize: 20.sp),
-                  ),
-
-                  GestureDetector(
-                    onTap: _toggleDropdown,
-                    child: Row(
-                      children: [
-                        Text(
-                          'Filter',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.sp,
-                          ),
-                        ),
-                        SizedBox(width: 5.w),
-                        Image.asset(
-                          'assets/images/filter.png',
-                          height: 24.h,
-                          width: 24.w,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8.h),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _filteredNutritions.length,
-              itemBuilder: (context, index) {
-                final nutrition = _filteredNutritions[index];
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  child: _nutritionCard(nutrition: nutrition, index: index),
-                );
-              },
-            ),
-          ],
-        ),
-        if (_isDropdownOpen)
-          Positioned(
-            right: 16.w,
-            top: 30.h,
-            child: Container(
-              width: 200.w,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(8.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  //dash board
+                  goalCard(name: "Meal Goals",cal: "1200"),
+                  SizedBox(height: 10.h,),
+                  goalCard(name: "Selected Meal",cal: "320"),
+
+                  SizedBox(height: 10.h,),
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 8.h,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Select meal time',
+                          'Suggest Exercise',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              color: Color(0xFFF5838C), fontSize: 20.sp),
                         ),
-                        Transform.rotate(
-                          angle: 4.71,
-                          child: Icon(
-                            Icons.arrow_back_ios_new_outlined,
-                            color: Colors.white,
+                        GestureDetector(
+                          onTap: () {},
+                          child: Row(
+                            children: [
+                              Text(
+                                'Filter',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.sp,
+                                ),
+                              ),
+                              SizedBox(width: 5.w),
+                              Image.asset(
+                                'assets/images/filter.png',
+                                height: 24.h,
+                                width: 24.w,
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  ...List.generate(_options.length, (index) {
-                    return GestureDetector(
-                      onTap: () => _toggleOption(index),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 8.h,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withAlpha(18),
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: _selectedOptions[index],
-                                onChanged: (value) => _toggleOption(index),
-                                activeColor: Colors.transparent,
-                                checkColor: Colors.white,
-                                side: BorderSide(color: Colors.white),
-                              ),
-                              Text(
-                                _options[index],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.sp,
+                  //workout list
+                  ListView.builder(
+                      itemCount: 3,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 10.h),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              color: const Color(0xFFFFFFFF).withAlpha(18),
+                              border: Border.all(color: Color(0xFFFB4958)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                //title
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.w, vertical: 10.h),
+                                  child: Row(
+                                    children: [
+                                      ResponsiveNetworkImage(
+                                        imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s",
+                                        heightPercent: .05,
+                                        widthPercent: .1,),
+                                      SizedBox(width: 10.w),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .start,
+                                        children: [
+                                          Text("Oats + Banana (Breakfast)",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+
+                                /// Suggest Library Title Row
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Suggest Exercise Library',
+                                        style: TextStyle(
+                                          color: Color(0xFFF5838C),
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          log('See all tapped');
+                                          Get.to(() => ExerciseLibrary());
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Nutrition Tips',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12.sp,
+                                                decoration: TextDecoration
+                                                    .underline,
+                                              ),
+                                            ),
+                                            Icon(Icons.arrow_right,
+                                                color: Colors.white),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                SizedBox(height: 10.h),
+
+                                /// 2 Row Items
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: nutritionCard(
+                                            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG7ElBNPs-HbYJJOMHRu7lEmphTn8-52FYKw&s',
+                                            cgm: '590 gm',
+                                            cal: '120',
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: nutritionCard(
+                                            image: 'https://assets.bonappetit.com/photos/57ad407653e63daf11a4dd60/master/w_940,h_671,c_limit/chopstick-ready-rice.jpg',
+                                            cgm: '590 gm',
+                                            cal: '120',
+                                        ),
+                                      ),
+
+
+                                    ],
+                                  ),
+                                ),
+
+
+                                SizedBox(height: 16.h),
+                              ],
+                            ),
                           ),
+                        );
+                      }),
+                  //Your Trainer
+                  Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: SizedBox(
+                      width: sw * 0.95,
+                      height: 40.h,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          backgroundColor: Colors.redAccent,
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        onPressed: () {
+                          Get.to(() => ChatDetailScreen(contactName: 'Trainer'));
+                        },
+                        child: Text(
+                          'Your Trainer',
+                          style: TextStyle(color: Colors.white, fontSize: 14.sp),
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                  ),
+                  SizedBox(height: 120.h),
                 ],
               ),
-            ),
+              // _goalCard(sw),
+              // SizedBox(height: 20.h),
+              // _selectMealCard(sw),
+              // SizedBox(height: 20.h),
+              // CustomDropdownWithFilter(nutritions: nutritions, sw: sw),
+              // SizedBox(height: 20.h),
+              // Padding(
+              //   padding: EdgeInsets.all(16.w),
+              //   child: SizedBox(
+              //     width: sw * 0.95,
+              //     height: 40.h,
+              //     child: ElevatedButton(
+              //       style: ElevatedButton.styleFrom(
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.horizontal(
+              //             left: Radius.circular(16.r),
+              //             right: Radius.circular(16.r),
+              //           ),
+              //         ),
+              //         backgroundColor: Colors.redAccent,
+              //         minimumSize: const Size(double.infinity, 50),
+              //       ),
+              //       onPressed: () {
+              //         Get.to(
+              //           () => ChatDetailScreen(contactName: 'Nutritionist'),
+              //         );
+              //       },
+              //       child: Text(
+              //         'Your Nutritionist',
+              //         style: TextStyle(color: Colors.white, fontSize: 14.sp),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 120.h),
+            ],
           ),
-      ],
+        ),
+      ),
     );
   }
-}
+
+//   Widget _goalCard(double sw) {
+//     final GoalController goalController = Get.find();
+//
+//     return Obx(
+//       () => _buildCard(
+//         sw,
+//         'Meal Goals',
+//         goalController.caloriesEaten.value.split(' ')[0],
+//       ),
+//     );
+//   }
+//
+//   Widget _selectMealCard(double sw) {
+//     return Obx(
+//       () => _buildCard(
+//         sw,
+//         'Select Meal',
+//         '${controller.remainingCalories.value}',
+//       ),
+//     );
+//   }
+//
+//   Widget _buildCard(double sw, String title, String value) {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: 12.w),
+//       child: Container(
+//         height: 60.h,
+//         width: sw * 0.95,
+//         decoration: BoxDecoration(
+//           color: Colors.white.withAlpha(18),
+//           borderRadius: BorderRadius.circular(12.r),
+//         ),
+//         child: Center(
+//           child: Padding(
+//             padding: EdgeInsets.symmetric(horizontal: 8.w),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Text(
+//                   '$title ',
+//                   style: TextStyle(
+//                     color: Colors.white,
+//                     fontSize: 26.sp,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 Text(
+//                   value,
+//                   style: TextStyle(
+//                     color: Color(0xFFFB4958),
+//                     fontSize: 26.sp,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 Text(
+//                   ' Kcal',
+//                   style: TextStyle(
+//                     color: Color(0xFFFB4958),
+//                     fontSize: 26.sp,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// class CustomDropdownWithFilter extends StatefulWidget {
+//   final List<NutritionModel> nutritions;
+//   final double sw;
+//
+//   const CustomDropdownWithFilter({
+//     super.key,
+//     required this.nutritions,
+//     required this.sw,
+//   });
+//
+//   @override
+//   State<CustomDropdownWithFilter> createState() =>
+//       _CustomDropdownWithFilterState();
+// }
+//
+// class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
+//   bool _isDropdownOpen = false;
+//   final List<String> _options = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+//   final List<bool> _selectedOptions = [false, false, false, false];
+//   List<NutritionModel> _filteredNutritions = [];
+//   final Set<int> _selectedIndices = {};
+//   final MealPlanController controller = Get.find();
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _filteredNutritions = widget.nutritions;
+//   }
+//
+//   void _toggleDropdown() {
+//     setState(() {
+//       _isDropdownOpen = !_isDropdownOpen;
+//     });
+//   }
+//
+//   void _toggleOption(int index) {
+//     setState(() {
+//       _selectedOptions[index] = !_selectedOptions[index];
+//       _filterNutritions();
+//     });
+//   }
+//
+//   void _filterNutritions() {
+//     List<String> selectedMealTimes = [];
+//     for (int i = 0; i < _selectedOptions.length; i++) {
+//       if (_selectedOptions[i]) {
+//         selectedMealTimes.add(_options[i]);
+//       }
+//     }
+//
+//     if (selectedMealTimes.isEmpty) {
+//       _filteredNutritions = widget.nutritions;
+//     } else {
+//       _filteredNutritions =
+//           widget.nutritions.where((nutrition) {
+//             return selectedMealTimes.any(
+//               (time) => nutrition.title.contains(time),
+//             );
+//           }).toList();
+//     }
+//   }
+//
+//   void _toggleSelection(int index) {
+//     setState(() {
+//       if (_selectedIndices.contains(index)) {
+//         _selectedIndices.remove(index);
+//         controller.remainingCalories.value -=
+//             _filteredNutritions[index].calories; // Fixed to subtract calories
+//       } else {
+//         _selectedIndices.add(index);
+//         controller.remainingCalories.value +=
+//             _filteredNutritions[index].calories;
+//       }
+//     });
+//   }
+//
+//   Widget _nutritionCard({
+//     required NutritionModel nutrition,
+//     required int index,
+//   }) {
+//     final isSelected = _selectedIndices.contains(index);
+//
+//     return GestureDetector(
+//       onTap: () => _toggleSelection(index),
+//       child: Padding(
+//         padding: EdgeInsets.symmetric(horizontal: 10.w),
+//         child: Container(
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(12.r),
+//             color: Colors.white.withAlpha(18),
+//             border:
+//                 isSelected
+//                     ? Border.all(color: Colors.redAccent, width: 2)
+//                     : null,
+//           ),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               Padding(
+//                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+//                 child: Row(
+//                   children: [
+//                     Image.asset(
+//                       nutrition.thumbnailUrl,
+//                       width: 60.w,
+//                       height: 60.h,
+//                     ),
+//                     SizedBox(width: 10.w),
+//                     Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           nutrition.title,
+//                           style: TextStyle(
+//                             color: Colors.white,
+//                             fontSize: 16.sp,
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               Padding(
+//                 padding: EdgeInsets.symmetric(horizontal: 20.w),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Text(
+//                       'Suggest nutrition Library',
+//                       style: TextStyle(
+//                         color: Color(0xFFF5838C),
+//                         fontSize: 12.sp,
+//                       ),
+//                     ),
+//                     GestureDetector(
+//                       onTap: () {
+//                         log('See all tapped');
+//                         // Get.to(() => NutritionLibrary());
+//                       },
+//                       child: Row(
+//                         children: [
+//                           Text(
+//                             'nutrition Tips',
+//                             style: TextStyle(
+//                               color: Colors.white,
+//                               fontSize: 12.sp,
+//                               decoration: TextDecoration.underline,
+//                             ),
+//                           ),
+//                           Icon(Icons.arrow_right, color: Colors.white),
+//                         ],
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               SizedBox(height: 10.h),
+//               Padding(
+//                 padding: EdgeInsets.symmetric(horizontal: 20.w),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Flexible(child: _nutritionItem(nutrition)),
+//                     Flexible(child: _nutritionItem(nutrition)),
+//                   ],
+//                 ),
+//               ),
+//               SizedBox(height: 16.h),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _nutritionItem(NutritionModel nutrition) {
+//     return Container(
+//       width: 130.w,
+//       height: 90.h,
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(12.r),
+//         image: DecorationImage(
+//           image: AssetImage(nutrition.imagePath),
+//           fit: BoxFit.cover,
+//           colorFilter: ColorFilter.mode(
+//             Colors.black.withOpacity(0.2),
+//             BlendMode.darken,
+//           ),
+//         ),
+//       ),
+//       child: Stack(
+//         alignment: Alignment.bottomLeft,
+//         children: [
+//           Center(
+//             child: CircleAvatar(
+//               backgroundColor: Colors.white.withAlpha(18),
+//               child: Image.asset(
+//                 nutrition.centerImagePath,
+//                 width: 10.w,
+//                 height: 10.h,
+//               ),
+//             ),
+//           ),
+//           Padding(
+//             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+//             child: Container(
+//               decoration: BoxDecoration(
+//                 color: Colors.white.withAlpha(30),
+//                 borderRadius: BorderRadius.circular(10.r),
+//               ),
+//               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+//               child: Row(
+//                 children: [
+//                   Text(
+//                     nutrition.quantity,
+//                     style: TextStyle(color: Colors.white, fontSize: 12.sp),
+//                   ),
+//                   SizedBox(width: 8.w),
+//                   Icon(
+//                     Icons.local_fire_department,
+//                     size: 14.sp,
+//                     color: Colors.white,
+//                   ),
+//                   SizedBox(width: 4.w),
+//                   Text(
+//                     nutrition.kcal,
+//                     style: TextStyle(color: Colors.white, fontSize: 12.sp),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       clipBehavior: Clip.none,
+//       children: [
+//         Column(
+//           children: [
+//             Padding(
+//               padding: EdgeInsets.symmetric(horizontal: 16.w),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text(
+//                     'Suggest Meals',
+//                     style: TextStyle(color: Color(0xFFF5838C), fontSize: 20.sp),
+//                   ),
+//
+//                   GestureDetector(
+//                     onTap: _toggleDropdown,
+//                     child: Row(
+//                       children: [
+//                         Text(
+//                           'Filter',
+//                           style: TextStyle(
+//                             color: Colors.white,
+//                             fontSize: 20.sp,
+//                           ),
+//                         ),
+//                         SizedBox(width: 5.w),
+//                         Image.asset(
+//                           'assets/images/filter.png',
+//                           height: 24.h,
+//                           width: 24.w,
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             SizedBox(height: 8.h),
+//             ListView.builder(
+//               shrinkWrap: true,
+//               physics: NeverScrollableScrollPhysics(),
+//               itemCount: _filteredNutritions.length,
+//               itemBuilder: (context, index) {
+//                 final nutrition = _filteredNutritions[index];
+//                 return Padding(
+//                   padding: EdgeInsets.only(bottom: 12.h),
+//                   child: _nutritionCard(nutrition: nutrition, index: index),
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//         if (_isDropdownOpen)
+//           Positioned(
+//             right: 16.w,
+//             top: 30.h,
+//             child: Container(
+//               width: 200.w,
+//               decoration: BoxDecoration(
+//                 color: Colors.black,
+//                 borderRadius: BorderRadius.circular(8.r),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.black26,
+//                     blurRadius: 4,
+//                     offset: Offset(0, 2),
+//                   ),
+//                 ],
+//               ),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Padding(
+//                     padding: EdgeInsets.symmetric(
+//                       horizontal: 16.w,
+//                       vertical: 8.h,
+//                     ),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           'Select meal time',
+//                           style: TextStyle(
+//                             color: Colors.white,
+//                             fontSize: 16.sp,
+//                             fontWeight: FontWeight.bold,
+//                           ),
+//                         ),
+//                         Transform.rotate(
+//                           angle: 4.71,
+//                           child: Icon(
+//                             Icons.arrow_back_ios_new_outlined,
+//                             color: Colors.white,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   ...List.generate(_options.length, (index) {
+//                     return GestureDetector(
+//                       onTap: () => _toggleOption(index),
+//                       child: Container(
+//                         padding: EdgeInsets.symmetric(
+//                           horizontal: 16.w,
+//                           vertical: 8.h,
+//                         ),
+//                         child: Container(
+//                           decoration: BoxDecoration(
+//                             color: Colors.white.withAlpha(18),
+//                             borderRadius: BorderRadius.circular(10.r),
+//                           ),
+//                           child: Row(
+//                             children: [
+//                               Checkbox(
+//                                 value: _selectedOptions[index],
+//                                 onChanged: (value) => _toggleOption(index),
+//                                 activeColor: Colors.transparent,
+//                                 checkColor: Colors.white,
+//                                 side: BorderSide(color: Colors.white),
+//                               ),
+//                               Text(
+//                                 _options[index],
+//                                 style: TextStyle(
+//                                   color: Colors.white,
+//                                   fontSize: 14.sp,
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     );
+//                   }),
+//                 ],
+//               ),
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+ }

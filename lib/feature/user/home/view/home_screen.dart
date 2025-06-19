@@ -10,7 +10,7 @@ import 'package:omega_web_inv/feature/user/home/view/workout_plan.dart';
 import '../../../../core/global_widegts/app_network_image.dart';
 import '../../nutrition/nutrition_page.dart';
 import '../../profile/controller/get_user_controller.dart';
-import '../../workouts/workout_page.dart';
+import '../../workouts/view/workout_page.dart';
 import '../controller/goal_controller.dart';
 import '../controller/workout_plan_controller.dart';
 import '../widgets/exercise_library.dart';

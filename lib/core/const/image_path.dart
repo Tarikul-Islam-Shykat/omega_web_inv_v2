@@ -12,6 +12,7 @@ class ImagePath {
   // static const String commentsIcon = "assets/images/comment.png";
   static const String auto = "assets/icons/auto.png";
   static const String toys = "assets/icons/toys.png";
+  static const String energy = "assets/icons/Rectangle.png";
   static const String sports = "assets/icons/sports.png";
   static const String pharmacy = "assets/icons/activity.png";
   static const String activity = "assets/icons/pharmacy.png";

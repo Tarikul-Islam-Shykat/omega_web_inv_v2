@@ -4,22 +4,54 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../manage_nutrition/controller/admin_goal_controller.dart';
+import '../controller/admin_workout_plan_controller.dart';
+import '../model/workout_model.dart';
 
 
+class WorkoutAdminPage extends StatelessWidget {
+  final AdminWorkoutPlanController controller =
+      Get.put(AdminWorkoutPlanController());
+  final AdminGoalController controgoalControllerller =
+      Get.put(AdminGoalController());
 
-import '../../../core/global_widegts/app_network_image.dart';
-import '../chat/chatbox/chat_message.dart';
-import '../home/controller/goal_controller.dart';
-import '../home/controller/workout_plan_controller.dart';
-import 'model/workout_model.dart';
+  final List<AdminWorkoutModel> workouts = [
+    AdminWorkoutModel(
+      time: '5 min',
+      kcal: '120',
+      title: 'Barbell Squat',
+      category: 'Lose Weight',
+      thumbnailUrl: 'assets/images/user.png',
+      durationMinutes: 5,
+      calories: 120,
+      imagePath: 'assets/images/workout1.png',
+      centerImagePath: 'assets/images/pause.png',
+    ),
+    AdminWorkoutModel(
+      time: '5 min',
+      kcal: '120',
+      title: 'Mountain Climbers',
+      category: 'Build Muscle',
+      thumbnailUrl: 'assets/images/user.png',
+      imagePath: 'assets/images/workout2.png',
+      centerImagePath: 'assets/images/pause.png',
+      durationMinutes: 5,
+      calories: 100,
+    ),
+    AdminWorkoutModel(
+      time: '5 min',
+      kcal: '200',
+      title: 'Pushups',
+      category: 'Stay Healthy',
+      thumbnailUrl: 'assets/images/user.png',
+      imagePath: 'assets/images/workout1.png',
+      centerImagePath: 'assets/images/pause.png',
+      durationMinutes: 5,
+      calories: 200,
+    ),
+  ];
 
-class WorkoutPage extends StatelessWidget {
-  final WorkoutPlanController controller = Get.put(WorkoutPlanController());
-  final GoalController goalController = Get.find();
-
-
-
-  WorkoutPage({super.key});
+  WorkoutAdminPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +61,48 @@ class WorkoutPage extends StatelessWidget {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 20.h),
+          padding: EdgeInsets.symmetric(vertical: 10.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // _goalCard(sw),
-              // SizedBox(height: 20.h),
-              // _selectWorkoutCard(sw),
-              // SizedBox(height: 20.h),
-              // CustomDropdownWithFilter(workouts: [], sw: 0.0,),
-              // SizedBox(height: 20.h),
+              //_goalCard(sw),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 15,
+                ),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Manage Workout',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '210',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-              //Your Trainer
+              SizedBox(height: 20.h),
+              CustomDropdownWithFilter(workouts: workouts, sw: sw),
+              SizedBox(height: 20.h),
               Padding(
                 padding: EdgeInsets.all(16.w),
                 child: SizedBox(
@@ -49,14 +111,15 @@ class WorkoutPage extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.r),
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(16.r),
+                          right: Radius.circular(16.r),
+                        ),
                       ),
                       backgroundColor: Colors.redAccent,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    onPressed: () {
-                      Get.to(() => ChatDetailScreen(contactName: 'Trainer'));
-                    },
+                    onPressed: () {},
                     child: Text(
                       'Your Trainer',
                       style: TextStyle(color: Colors.white, fontSize: 14.sp),
@@ -73,7 +136,7 @@ class WorkoutPage extends StatelessWidget {
   }
 
   Widget _goalCard(double sw) {
-    final GoalController goalController = Get.find();
+    final AdminGoalController goalController = Get.find();
 
     return Obx(
       () => _buildCard(
@@ -86,11 +149,13 @@ class WorkoutPage extends StatelessWidget {
   }
 
   Widget _selectWorkoutCard(double sw) {
-    return  _buildCard(
+    return Obx(
+      () => _buildCard(
         sw,
         'Select Workout',
-        '129',
-      );
+        '${controller.remainingCalories.value}',
+      ),
+    );
   }
 
   Widget _buildCard(double sw, String title, String value) {
@@ -143,7 +208,7 @@ class WorkoutPage extends StatelessWidget {
 }
 
 class CustomDropdownWithFilter extends StatefulWidget {
-  final List workouts;
+  final List<AdminWorkoutModel> workouts;
   final double sw;
 
   const CustomDropdownWithFilter({
@@ -166,75 +231,79 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
     'Other',
   ];
   final List<bool> _selectedOptions = [false, false, false, false];
-
+  List<AdminWorkoutModel> _filteredWorkouts = [];
   final Set<int> _selectedIndices = {}; // Track multiple selected indices
-  final WorkoutPlanController controller = Get.find();
+  final AdminWorkoutPlanController controller = Get.find();
 
+  @override
+  void initState() {
+    super.initState();
+    _filteredWorkouts = widget.workouts;
+  }
 
-  // void _toggleDropdown() {
-  //   setState(() {
-  //     _isDropdownOpen = !_isDropdownOpen;
-  //   });
-  // }
-  //
-  // void _toggleOption(int index) {
-  //   setState(() {
-  //     _selectedOptions[index] = !_selectedOptions[index];
-  //     _filterWorkouts();
-  //   });
-  // }
-  //
-  // void _filterWorkouts() {
-  //   List<String> selectedTitles = [];
-  //   for (int i = 0; i < _selectedOptions.length; i++) {
-  //     if (_selectedOptions[i]) {
-  //       selectedTitles.add(_options[i]);
-  //     }
-  //   }
-  //
-  //   if (selectedTitles.isEmpty) {
-  //     _filteredWorkouts = widget.workouts;
-  //   } else {
-  //     _filteredWorkouts =
-  //         widget.workouts.where((workout) {
-  //           return selectedTitles.contains(workout.title) ||
-  //               (selectedTitles.contains('Other') &&
-  //                   !_options.sublist(0, 3).contains(workout.title));
-  //         }).toList();
-  //   }
-  // }
-  //
-  // void _toggleSelection(int index) {
-  //   setState(() {
-  //     if (_selectedIndices.contains(index)) {
-  //       _selectedIndices.remove(index);
-  //       controller.remainingCalories.value -= int.parse(
-  //         _filteredWorkouts[index].kcal,
-  //       );
-  //     } else {
-  //       _selectedIndices.add(index);
-  //       controller.remainingCalories.value += int.parse(
-  //         _filteredWorkouts[index].kcal,
-  //       );
-  //     }
-  //   });
-  // }
+  void _toggleDropdown() {
+    setState(() {
+      _isDropdownOpen = !_isDropdownOpen;
+    });
+  }
 
-  Widget _exerciseCard() {
-    final isSelected = _selectedIndices.contains(1);
+  void _toggleOption(int index) {
+    setState(() {
+      _selectedOptions[index] = !_selectedOptions[index];
+      _filterWorkouts();
+    });
+  }
+
+  void _filterWorkouts() {
+    List<String> selectedTitles = [];
+    for (int i = 0; i < _selectedOptions.length; i++) {
+      if (_selectedOptions[i]) {
+        selectedTitles.add(_options[i]);
+      }
+    }
+
+    if (selectedTitles.isEmpty) {
+      _filteredWorkouts = widget.workouts;
+    } else {
+      _filteredWorkouts = widget.workouts.where((workout) {
+        return selectedTitles.contains(workout.title) ||
+            (selectedTitles.contains('Other') &&
+                !_options.sublist(0, 3).contains(workout.title));
+      }).toList();
+    }
+  }
+
+  void _toggleSelection(int index) {
+    setState(() {
+      if (_selectedIndices.contains(index)) {
+        _selectedIndices.remove(index);
+        controller.remainingCalories.value -= int.parse(
+          _filteredWorkouts[index].kcal,
+        );
+      } else {
+        _selectedIndices.add(index);
+        controller.remainingCalories.value += int.parse(
+          _filteredWorkouts[index].kcal,
+        );
+      }
+    });
+  }
+
+  Widget _exerciseCard(
+      {required AdminWorkoutModel exercise, required int index}) {
+    final isSelected = _selectedIndices.contains(index);
 
     return GestureDetector(
-      onTap: (){},
+      onTap: () => _toggleSelection(index),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.w),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.r),
             color: Colors.white.withAlpha(18),
-            border:
-                isSelected
-                    ? Border.all(color: Colors.redAccent, width: 2)
-                    : null,
+            border: isSelected
+                ? Border.all(color: Colors.redAccent, width: 2)
+                : null,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -243,7 +312,8 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                 child: Row(
                   children: [
-                    Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s",
+                    Image.asset(
+                      exercise.thumbnailUrl,
                       width: 60.w,
                       height: 60.h,
                     ),
@@ -251,7 +321,8 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("exercise.title",
+                        Text(
+                          exercise.title,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.sp,
@@ -259,7 +330,8 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                           ),
                         ),
                         SizedBox(height: 5.h),
-                        Text("exercise.category",
+                        Text(
+                          exercise.category,
                           style: TextStyle(
                             color: Color(0xFFCCCBCB),
                             fontSize: 16.sp,
@@ -310,9 +382,9 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(child: _libraryItem()),
+                    Flexible(child: _libraryItem(exercise)),
                     SizedBox(width: 10.w),
-                    Flexible(child: _libraryItem()),
+                    Flexible(child: _libraryItem(exercise)),
                   ],
                 ),
               ),
@@ -324,14 +396,14 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
     );
   }
 
-  Widget _libraryItem() {
+  Widget _libraryItem(AdminWorkoutModel workout) {
     return AspectRatio(
       aspectRatio: 3 / 2,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
           image: DecorationImage(
-            image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s"),
+            image: AssetImage(workout.imagePath),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.black.withOpacity(0.2),
@@ -366,7 +438,8 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                     children: [
                       Icon(Icons.timer, size: 14.sp, color: Colors.white),
                       SizedBox(width: 4.w),
-                      Text("workout.time",
+                      Text(
+                        workout.time,
                         style: TextStyle(color: Colors.white, fontSize: 12.sp),
                       ),
                       SizedBox(width: 8.w),
@@ -376,7 +449,8 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                         color: Colors.white,
                       ),
                       SizedBox(width: 4.w),
-                      Text("workout.kcal",
+                      Text(
+                        workout.kcal,
                         style: TextStyle(color: Colors.white, fontSize: 12.sp),
                       ),
                     ],
@@ -397,8 +471,6 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
       children: [
         Column(
           children: [
-
-            //Suggest Exercise filter
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -409,7 +481,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                     style: TextStyle(color: Color(0xFFF5838C), fontSize: 20.sp),
                   ),
                   GestureDetector(
-                    onTap: (){},
+                    onTap: _toggleDropdown,
                     child: Row(
                       children: [
                         Text(
@@ -432,18 +504,18 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
               ),
             ),
             SizedBox(height: 8.h),
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   physics: NeverScrollableScrollPhysics(),
-            //   itemCount: _filteredWorkouts.length,
-            //   itemBuilder: (context, index) {
-            //     final exercise = _filteredWorkouts[index];
-            //     return Padding(
-            //       padding: EdgeInsets.only(bottom: 12.h),
-            //       child: _exerciseCard(exercise: exercise, index: index),
-            //     );
-            //   },
-            // ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: _filteredWorkouts.length,
+              itemBuilder: (context, index) {
+                final exercise = _filteredWorkouts[index];
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 12.h),
+                  child: _exerciseCard(exercise: exercise, index: index),
+                );
+              },
+            ),
           ],
         ),
         if (_isDropdownOpen)
@@ -494,7 +566,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                   ),
                   ...List.generate(_options.length, (index) {
                     return GestureDetector(
-                      onTap: (){},
+                      onTap: () => _toggleOption(index),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
@@ -511,7 +583,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                             children: [
                               Checkbox(
                                 value: _selectedOptions[index],
-                                onChanged: (value) {},
+                                onChanged: (value) => _toggleOption(index),
                                 activeColor: Colors.transparent,
                                 checkColor: Colors.white,
                                 side: BorderSide(color: Colors.white),
@@ -546,9 +618,9 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
 }
 
 class WorkoutCard extends StatelessWidget {
+  final AdminWorkoutModel workout;
 
-
-  const WorkoutCard({super.key,});
+  const WorkoutCard({super.key, required this.workout});
 
   @override
   Widget build(BuildContext context) {
@@ -566,18 +638,20 @@ class WorkoutCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                ResponsiveNetworkImage(imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s',heightPercent: .05,),
+                Image.asset(workout.thumbnailUrl, height: 60),
                 SizedBox(width: 10.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Title",
+                    Text(
+                      workout.title,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text("workout.category",
+                    Text(
+                      workout.category,
                       style: TextStyle(color: Colors.grey),
                     ),
                   ],

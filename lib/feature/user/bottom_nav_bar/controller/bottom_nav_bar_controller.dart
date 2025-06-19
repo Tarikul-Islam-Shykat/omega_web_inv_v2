@@ -45,11 +45,11 @@
 // bottom_nav_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../admin/manage_workout/workout_page.dart';
 import '../../community/view/user_community_screen.dart';
 import '../../home/view/home_screen.dart';
 import '../../nutrition/nutrition_page.dart';
 import '../../progress/screen/progress_screen.dart';
+import '../../workouts/view/workout_page.dart';
 
 class BottomNavController extends GetxController {
   var selectedIndex = 0.obs;
