@@ -3,6 +3,7 @@ import 'package:omega_web_inv/feature/auth/screens/sign_up_screen.dart';
 import '../feature/Auth/screens/find_account_screen.dart';
 import '../feature/Auth/screens/forget_pass_otp_verification.dart';
 import '../feature/Auth/screens/login_screen.dart';
+import '../feature/auth/screens/reset_pass_screen.dart';
 import '../feature/splash_screen/screen/splash_screen.dart';
 import '../feature/user/profile/view/user_info_setup.dart';
 import '../feature/user/subscription/view/user_subscription_plan.dart';
@@ -43,6 +44,7 @@ class AppRoute {
 
     GetPage(name: forgetScreen, page: () => FindAccountScreen()),
     GetPage(name: forgetOTPScreen, page: () => ForgetPassOtpVerification()),
+    GetPage(name: resetPassScreen, page: () => ResetPasswordScreen()),
 
 
 

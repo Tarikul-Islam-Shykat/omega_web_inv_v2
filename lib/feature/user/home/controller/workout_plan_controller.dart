@@ -1,54 +1,22 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:omega_web_inv/core/global_widegts/app_snackbar.dart';
 import 'package:omega_web_inv/core/repository/network_caller/network_config.dart';
 import 'package:omega_web_inv/feature/user/home/model/workout_plan_model.dart';
 import '../../../../core/repository/network_caller/endpoints.dart';
-import 'goal_controller.dart';
 
 class WorkoutPlanController extends GetxController {
   final NetworkConfig _networkConfig = NetworkConfig();
-  var completedExercises = <String>[].obs;
-  final RxInt remainingCalories = 0.obs;
-
-  final GoalController goalController = Get.find();
-
+  RxInt totalBurnedCalories = 0.obs;
   @override
   onInit(){
     super.onInit();
     getWorkOut();
   }
 
-  bool _isInitialized = false;
-
-  void initializeCalories(String calorieCount) {
-    if (!_isInitialized) {
-      remainingCalories.value = int.tryParse(calorieCount) ?? 0;
-      _isInitialized = true;
-    }
-  }
-
-  void completeExercise(String kcal, String exerciseId) {
-    if (!completedExercises.contains(exerciseId)) {
-      int kcalValue = int.parse(kcal);
-
-      if (remainingCalories.value >= kcalValue) {
-        remainingCalories.value -= kcalValue;
-      } else {
-        remainingCalories.value = 0;
-      }
-
-      goalController.updateCaloriesBurned(
-        (int.parse(goalController.caloriesBurned.value.split(' ')[0]) +
-                kcalValue)
-            .toString(),
-      );
-
-      completedExercises.add(exerciseId);
-    }
-  }
-
   RxList<WorkOutPlanModel> workOutPlan = <WorkOutPlanModel>[].obs;
   RxBool isGetWorkOut = false.obs;
+  RxBool isLoadingComplete= false.obs;
   Future<bool> getWorkOut()async{
     try{
       isGetWorkOut.value = true;
@@ -68,5 +36,41 @@ class WorkoutPlanController extends GetxController {
       isGetWorkOut.value = false;
     }
   }
+
+  Future<bool> workoutCompleted(String id, int kcal, int index) async {
+    isLoadingComplete.value = true;
+    try {
+      final response = await _networkConfig.ApiRequestHandler(
+        RequestMethod.PATCH,
+        "${Urls.completeWorkoutPlan}/$id",
+        {},
+        is_auth: true,
+      );
+
+      if (response != null && response["success"] == true) {
+        AppSnackbar.show(message: "${response["message"]}", isSuccess: true);
+
+
+        totalBurnedCalories.value += kcal;
+
+
+        workOutPlan[index].isCompleted = true;
+        workOutPlan.refresh();
+
+        return true;
+      } else {
+        AppSnackbar.show(message: "${response["message"]}", isSuccess: false);
+        log("failed patch data ${response["message"]}");
+        return false;
+      }
+    } catch (e) {
+      AppSnackbar.show(message: e.toString(), isSuccess: false);
+      log("failed Response patch data ${e.toString()}");
+      return false;
+    } finally {
+      isLoadingComplete.value = false;
+    }
+  }
+
 
 }

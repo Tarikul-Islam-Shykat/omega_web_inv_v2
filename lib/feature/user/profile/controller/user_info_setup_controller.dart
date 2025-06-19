@@ -333,6 +333,7 @@ class UserInfoSetupController extends GetxController {
   Future<bool> uploadProfilePicture() async {
     if (profileImage.value == null) {
       errorMessage.value = 'Please select a profile picture';
+      AppSnackbar.show(message: 'Please select a profile picture', isSuccess: false);
       return false;
     }
     if (nameController.text.isEmpty ||
@@ -342,6 +343,7 @@ class UserInfoSetupController extends GetxController {
         heightController.text.isEmpty ||
         selectedFitnessGoal.value.isEmpty) {
       errorMessage.value = 'Please fill all required fields';
+      AppSnackbar.show(message: 'Please fill all required fields', isSuccess: false);
       return false;
     }
 
@@ -414,6 +416,7 @@ class UserInfoSetupController extends GetxController {
         return true;
       } else {
         errorMessage.value = responseJson['message'] ?? 'Upload failed';
+        AppSnackbar.show(message: responseJson['message'], isSuccess: false);
         log("Upload failed: ${responseJson['message']}");
         return false;
       }

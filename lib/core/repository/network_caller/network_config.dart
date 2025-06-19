@@ -9,7 +9,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum RequestMethod { GET, POST, PUT, DELETE }
+enum RequestMethod { GET, POST, PUT, DELETE,PATCH }
 
 class NetworkConfig {
   Future ApiRequestHandler(RequestMethod method, url, json_body,
@@ -73,6 +73,26 @@ class NetworkConfig {
             return json.decode(req.body);
           } else {
             throw Exception("Server Error");
+          }
+        } catch (e) {
+          ShowError(e);
+        }
+      }else if (method.name == RequestMethod.PATCH.name) {
+        try {
+          var req = await http.patch(Uri.parse(url), headers: header, body: json_body);
+
+          debugPrint("STATUS CODE :${req.statusCode}");
+          debugPrint("TOKEN :${sh.getString("token")}");
+          debugPrint("RESPONSE BODY : ${jsonDecode(req.body)}");
+          if (req.statusCode == 200) {
+            return json.decode(req.body);
+          } else {
+            debugPrint("STATUS CODE :${req.statusCode}");
+            debugPrint("RESPONSE BODY : ${req.body}");
+            return {
+              "success": false,
+              "message": json.decode(req.body)["message"] ?? "Server error",
+            };
           }
         } catch (e) {
           ShowError(e);

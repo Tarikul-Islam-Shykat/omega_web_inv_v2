@@ -1,39 +1,36 @@
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
-
-class VideoController extends GetxController{
-  late VideoPlayerController videoController;
-  RxBool isInitialize = false.obs;
+class VideoController extends GetxController {
+  final String videoUrl;
+  late VideoPlayerController videoPlayerController;
+  RxBool isInitialized = false.obs;
   RxBool isPlaying = false.obs;
 
-   initializeVideo(String videoUrl){
-    videoController = VideoPlayerController.networkUrl(Uri.parse(videoUrl))
-    ..initialize().then((_){
-      isInitialize.value = true;
-      update();
-    });
-  }
+  VideoController({required this.videoUrl});
 
-  void onPlayPush(){
-    if(videoController.value.isPlaying){
-      videoController.pause();
-      isPlaying.value = false;
-    }else{
-      videoController.play();
-      isPlaying.value = true;
-    }
-  }
   @override
   void onInit() {
     super.onInit();
-    videoController.value;
+    videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(videoUrl))
+      ..initialize().then((_) {
+        isInitialized.value = true;
+      });
+  }
+
+  void togglePlayPause() {
+    if (videoPlayerController.value.isPlaying) {
+      videoPlayerController.pause();
+      isPlaying.value = false;
+    } else {
+      videoPlayerController.play();
+      isPlaying.value = true;
+    }
   }
 
   @override
   void onClose() {
-    super.onClose();
-    videoController.dispose();
+    videoPlayerController.dispose();
     super.onClose();
   }
 }

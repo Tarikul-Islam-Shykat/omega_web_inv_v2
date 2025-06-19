@@ -13,7 +13,9 @@ class Urls {
   static const String getUserSingleInfo = '$baseUrl/users-info'; //GET
 
   //__________________User_____________________
-  static const String workoutPlan = "$baseUrl/workout-plans"; //GET
+  static const String allWorkout = "$baseUrl/Workout"; //GET ALL
+  static const String workoutPlan = "$baseUrl/workout-plans"; //GET USER
+  static const String completeWorkoutPlan = "$baseUrl/workout-plans"; //PATCH id
 
 
 

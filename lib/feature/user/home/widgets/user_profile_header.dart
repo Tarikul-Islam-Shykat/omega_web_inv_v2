@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:omega_web_inv/core/global_widegts/app_shimmer.dart';
 import 'package:omega_web_inv/feature/user/profile/controller/get_user_controller.dart';
 import '../../../../core/global_widegts/app_network_image.dart';
 import '../../chat/chatbox/chat_list.dart';
@@ -41,7 +42,7 @@ class UserProfileHeader extends StatelessWidget {
       ),
       child: Obx((){
         if(userController.isGetMeLoading.value){
-          return CircularProgressIndicator();
+          return boxShimmerPro(width: MediaQuery.of(context).size.width - 20.w, height: 80.h,);
         }
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

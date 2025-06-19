@@ -1,7 +1,7 @@
 
 class WorkOutPlanModel {
   final String? id;
-  final bool? isCompleted;
+  late final bool? isCompleted;
   final Workout? workout;
 
   WorkOutPlanModel({

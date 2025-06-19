@@ -5,11 +5,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:omega_web_inv/core/global_widegts/app_shimmer.dart';
 import 'package:omega_web_inv/feature/user/home/view/workout_plan.dart';
+import '../../../../core/global_widegts/app_network_image.dart';
 import '../../nutrition/nutrition_page.dart';
 import '../../profile/controller/get_user_controller.dart';
 import '../../workouts/workout_page.dart';
 import '../controller/goal_controller.dart';
+import '../controller/workout_plan_controller.dart';
 import '../widgets/exercise_library.dart';
 import '../widgets/goal_card.dart';
 import '../widgets/user_profile_header.dart';
@@ -20,6 +23,7 @@ class HomeContent extends StatelessWidget {
 
   final controller = Get.put(GoalController());
   final userController = Get.put(GetUserController());
+  final workoutController = Get.put(WorkoutPlanController());
 
   @override
   Widget build(BuildContext context) {
@@ -139,36 +143,107 @@ class HomeContent extends StatelessWidget {
               SizedBox(height: 24.h),
 
               // Workout Plans
-              _sectionCard(
-                title: "Workout Plans (550)",
-                items: [
-                  "Barbell squat 10 Minutes",
-                  "Mountain Climbers 5 Minutes",
-                  "Pushups 10 reps",
-                ],
-                icons: [
-                  "assets/images/user.png",
-                  "assets/images/user.png",
-                  "assets/images/user.png",
-                ],
-              ),
+          Obx((){
+            if(workoutController.isGetWorkOut.value){
+              return boxShimmerPro(width: double.infinity, height: 200);
+            }else{
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: Color(0xFF2A2A2A),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text("Workout Plans",
+                          style: TextStyle(
+                            color: Color(0xFFF5838C),
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        // Display the calorie count separately
+                        Text("500",
+                          style: TextStyle(
+                            color: Color(0xFFF5838C),
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => WorkoutPlan());
+                          },
+                          child: CircleAvatar(
+                            radius: 25.r,
+                            backgroundColor: Color(0xFFFB4958),
+                            child: Transform.rotate(
+                              angle: 1.57 / 2,
+                              child: Icon(
+                                Icons.arrow_upward_rounded,
+                                size: 30.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6.h),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: workoutController.workOutPlan.length,
+                        itemBuilder:(context,index){
+                          final data = workoutController.workOutPlan[index];
+                          return Padding(padding:EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            children: [
+                              Container(
+                                  padding: EdgeInsets.all(3),
+                                  height:MediaQuery.sizeOf(context).height* .04,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white10),
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: ResponsiveNetworkImage(imageUrl:data.workout!.icon.toString(),heightPercent: .04,widthPercent: .09,fit: BoxFit.contain,borderRadius: 3,)),
+                              SizedBox(width: 10.w),
+                              Text(data.workout!.title.toString(),
+                                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                              ),
+                            ],
+                          ),);
+                        }),
+                  ],
+                ),
+              );
+            }
+
+            }
+          ),
 
               SizedBox(height: 16.h),
 
               // Meal Plans
-              _sectionCard(
-                title: "Meal Plans (1200)",
-                items: [
-                  "Oats + Banana (Breakfast)",
-                  "Rice, Grilled, Veggies (Lunch)",
-                  "Salad + Soup (Dinner)",
-                ],
-                icons: [
-                  "assets/images/user.png",
-                  "assets/images/user.png",
-                  "assets/images/user.png",
-                ],
-              ),
+              // _sectionCard(
+              //   title: "Meal Plans (1200)",
+              //   items: [
+              //     "Oats + Banana (Breakfast)",
+              //     "Rice, Grilled, Veggies (Lunch)",
+              //     "Salad + Soup (Dinner)",
+              //   ],
+              //   icons: [
+              //     "assets/images/user.png",
+              //     "assets/images/user.png",
+              //     "assets/images/user.png",
+              //   ],
+              // ),
             ],
           ),
         ),
@@ -264,94 +339,97 @@ class HomeContent extends StatelessWidget {
     );
   }
 
-  Widget _sectionCard({
-    required String title,
-    required List<String> items,
-    required List<String> icons,
-  }) {
-    String calorieCount = '';
-    final RegExp regex = RegExp(r'\((\d+)\)');
-    final match = regex.firstMatch(title);
-    if (match != null) {
-      calorieCount = match.group(1) ?? '';
-    }
-
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: Color(0xFF2A2A2A),
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                title.replaceAll('($calorieCount)', '').trim(),
-                style: TextStyle(
-                  color: Color(0xFFF5838C),
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(width: 8.w),
-              // Display the calorie count separately
-              Text(
-                calorieCount.isNotEmpty ? '($calorieCount)' : '',
-                style: TextStyle(
-                  color: Color(0xFFF5838C),
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Spacer(),
-              GestureDetector(
-                onTap: () {
-                  if (title.contains("Workout Plans")) {
-                    Get.to(() => WorkoutPlan());
-                    log(
-                      'Navigating to WorkoutPlan with calories: $calorieCount',
-                    );
-                  } else if (title.contains("Meal Plans")) {
-                    Get.to(() => MealPlan(calorieCount: calorieCount));
-                    log('Navigating to MealPlan with calories: $calorieCount');
-                  }
-                },
-                child: CircleAvatar(
-                  radius: 25.r,
-                  backgroundColor: Color(0xFFFB4958),
-                  child: Transform.rotate(
-                    angle: 1.57 / 2,
-                    child: Icon(
-                      Icons.arrow_upward_rounded,
-                      size: 30.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          ...List.generate(items.length, (index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 6.h),
-              child: Row(
-                children: [
-                  Image.asset(icons[index], width: 40.w, height: 40.h),
-                  SizedBox(width: 10.w),
-                  Text(
-                    items[index],
-                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
-                  ),
-                ],
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
+  // Widget _sectionCard({
+  //   required String title,
+  //   required List<String> items,
+  //   required List<String> icons,
+  // }) {
+  //   String calorieCount = '';
+  //   final RegExp regex = RegExp(r'\((\d+)\)');
+  //   final match = regex.firstMatch(title);
+  //   if (match != null) {
+  //     calorieCount = match.group(1) ?? '';
+  //   }
+  //
+  //   return Container(
+  //     width: double.infinity,
+  //     padding: EdgeInsets.all(12.w),
+  //     decoration: BoxDecoration(
+  //       color: Color(0xFF2A2A2A),
+  //       borderRadius: BorderRadius.circular(16.r),
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Text(
+  //               title.replaceAll('($calorieCount)', '').trim(),
+  //               style: TextStyle(
+  //                 color: Color(0xFFF5838C),
+  //                 fontSize: 20.sp,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             SizedBox(width: 8.w),
+  //             // Display the calorie count separately
+  //             Text(
+  //               calorieCount.isNotEmpty ? '($calorieCount)' : '',
+  //               style: TextStyle(
+  //                 color: Color(0xFFF5838C),
+  //                 fontSize: 16.sp,
+  //                 fontWeight: FontWeight.w500,
+  //               ),
+  //             ),
+  //             Spacer(),
+  //             GestureDetector(
+  //               onTap: () {
+  //                 if (title.contains("Workout Plans")) {
+  //                   Get.to(() => WorkoutPlan());
+  //                   log(
+  //                     'Navigating to WorkoutPlan with calories: $calorieCount',
+  //                   );
+  //                 } else if (title.contains("Meal Plans")) {
+  //                   Get.to(() => MealPlan(calorieCount: calorieCount));
+  //                   log('Navigating to MealPlan with calories: $calorieCount');
+  //                 }
+  //               },
+  //               child: CircleAvatar(
+  //                 radius: 25.r,
+  //                 backgroundColor: Color(0xFFFB4958),
+  //                 child: Transform.rotate(
+  //                   angle: 1.57 / 2,
+  //                   child: Icon(
+  //                     Icons.arrow_upward_rounded,
+  //                     size: 30.sp,
+  //                     color: Colors.white,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 12.h),
+  //         ListView.builder(
+  //           itemCount: items.length,
+  //             itemBuilder:(context,index){
+  //             final data = items[index];
+  //               return Padding(
+  //                 padding: EdgeInsets.symmetric(vertical: 6.h),
+  //                 child: Row(
+  //                   children: [
+  //
+  //                     Image.asset(icons[index], width: 40.w, height: 40.h),
+  //                     SizedBox(width: 10.w),
+  //                     Text(name,
+  //                       style: TextStyle(color: Colors.white, fontSize: 16.sp),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               );
+  //         }),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

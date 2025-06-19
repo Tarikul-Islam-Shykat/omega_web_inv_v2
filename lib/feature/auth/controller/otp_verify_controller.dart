@@ -37,6 +37,7 @@ final NetworkConfig _networkConfig = NetworkConfig();
               'email':email.toString(),
             },
             AppRoute.resetPassScreen);
+        log("go to reset password screen");
         return true;
       }else{
         AppSnackbar.show(message: "${response['message']}", isSuccess: false);

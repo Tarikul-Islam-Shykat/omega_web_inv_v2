@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 
 
+import '../../../core/global_widegts/app_network_image.dart';
 import '../chat/chatbox/chat_message.dart';
 import '../home/controller/goal_controller.dart';
 import '../home/controller/workout_plan_controller.dart';
@@ -16,41 +17,7 @@ class WorkoutPage extends StatelessWidget {
   final WorkoutPlanController controller = Get.put(WorkoutPlanController());
   final GoalController goalController = Get.find();
 
-  final List<WorkoutModel> workouts = [
-    WorkoutModel(
-      time: '5 min',
-      kcal: '120',
-      title: 'Barbell Squat',
-      category: 'Lose Weight',
-      thumbnailUrl: 'assets/images/user.png',
-      durationMinutes: 5,
-      calories: 120,
-      imagePath: 'assets/images/workout1.png',
-      centerImagePath: 'assets/images/pause.png',
-    ),
-    WorkoutModel(
-      time: '5 min',
-      kcal: '120',
-      title: 'Mountain Climbers',
-      category: 'Build Muscle',
-      thumbnailUrl: 'assets/images/user.png',
-      imagePath: 'assets/images/workout2.png',
-      centerImagePath: 'assets/images/pause.png',
-      durationMinutes: 5,
-      calories: 100,
-    ),
-    WorkoutModel(
-      time: '5 min',
-      kcal: '200',
-      title: 'Pushups',
-      category: 'Stay Healthy',
-      thumbnailUrl: 'assets/images/user.png',
-      imagePath: 'assets/images/workout1.png',
-      centerImagePath: 'assets/images/pause.png',
-      durationMinutes: 5,
-      calories: 200,
-    ),
-  ];
+
 
   WorkoutPage({super.key});
 
@@ -66,12 +33,14 @@ class WorkoutPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _goalCard(sw),
-              SizedBox(height: 20.h),
-              _selectWorkoutCard(sw),
-              SizedBox(height: 20.h),
-              CustomDropdownWithFilter(workouts: workouts, sw: sw),
-              SizedBox(height: 20.h),
+              // _goalCard(sw),
+              // SizedBox(height: 20.h),
+              // _selectWorkoutCard(sw),
+              // SizedBox(height: 20.h),
+              // CustomDropdownWithFilter(workouts: [], sw: 0.0,),
+              // SizedBox(height: 20.h),
+
+              //Your Trainer
               Padding(
                 padding: EdgeInsets.all(16.w),
                 child: SizedBox(
@@ -80,10 +49,7 @@ class WorkoutPage extends StatelessWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.horizontal(
-                          left: Radius.circular(16.r),
-                          right: Radius.circular(16.r),
-                        ),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       backgroundColor: Colors.redAccent,
                       minimumSize: const Size(double.infinity, 50),
@@ -120,13 +86,11 @@ class WorkoutPage extends StatelessWidget {
   }
 
   Widget _selectWorkoutCard(double sw) {
-    return Obx(
-      () => _buildCard(
+    return  _buildCard(
         sw,
         'Select Workout',
-        '${controller.remainingCalories.value}',
-      ),
-    );
+        '129',
+      );
   }
 
   Widget _buildCard(double sw, String title, String value) {
@@ -179,7 +143,7 @@ class WorkoutPage extends StatelessWidget {
 }
 
 class CustomDropdownWithFilter extends StatefulWidget {
-  final List<WorkoutModel> workouts;
+  final List workouts;
   final double sw;
 
   const CustomDropdownWithFilter({
@@ -202,70 +166,65 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
     'Other',
   ];
   final List<bool> _selectedOptions = [false, false, false, false];
-  List<WorkoutModel> _filteredWorkouts = [];
+
   final Set<int> _selectedIndices = {}; // Track multiple selected indices
   final WorkoutPlanController controller = Get.find();
 
-  @override
-  void initState() {
-    super.initState();
-    _filteredWorkouts = widget.workouts;
-  }
 
-  void _toggleDropdown() {
-    setState(() {
-      _isDropdownOpen = !_isDropdownOpen;
-    });
-  }
+  // void _toggleDropdown() {
+  //   setState(() {
+  //     _isDropdownOpen = !_isDropdownOpen;
+  //   });
+  // }
+  //
+  // void _toggleOption(int index) {
+  //   setState(() {
+  //     _selectedOptions[index] = !_selectedOptions[index];
+  //     _filterWorkouts();
+  //   });
+  // }
+  //
+  // void _filterWorkouts() {
+  //   List<String> selectedTitles = [];
+  //   for (int i = 0; i < _selectedOptions.length; i++) {
+  //     if (_selectedOptions[i]) {
+  //       selectedTitles.add(_options[i]);
+  //     }
+  //   }
+  //
+  //   if (selectedTitles.isEmpty) {
+  //     _filteredWorkouts = widget.workouts;
+  //   } else {
+  //     _filteredWorkouts =
+  //         widget.workouts.where((workout) {
+  //           return selectedTitles.contains(workout.title) ||
+  //               (selectedTitles.contains('Other') &&
+  //                   !_options.sublist(0, 3).contains(workout.title));
+  //         }).toList();
+  //   }
+  // }
+  //
+  // void _toggleSelection(int index) {
+  //   setState(() {
+  //     if (_selectedIndices.contains(index)) {
+  //       _selectedIndices.remove(index);
+  //       controller.remainingCalories.value -= int.parse(
+  //         _filteredWorkouts[index].kcal,
+  //       );
+  //     } else {
+  //       _selectedIndices.add(index);
+  //       controller.remainingCalories.value += int.parse(
+  //         _filteredWorkouts[index].kcal,
+  //       );
+  //     }
+  //   });
+  // }
 
-  void _toggleOption(int index) {
-    setState(() {
-      _selectedOptions[index] = !_selectedOptions[index];
-      _filterWorkouts();
-    });
-  }
-
-  void _filterWorkouts() {
-    List<String> selectedTitles = [];
-    for (int i = 0; i < _selectedOptions.length; i++) {
-      if (_selectedOptions[i]) {
-        selectedTitles.add(_options[i]);
-      }
-    }
-
-    if (selectedTitles.isEmpty) {
-      _filteredWorkouts = widget.workouts;
-    } else {
-      _filteredWorkouts =
-          widget.workouts.where((workout) {
-            return selectedTitles.contains(workout.title) ||
-                (selectedTitles.contains('Other') &&
-                    !_options.sublist(0, 3).contains(workout.title));
-          }).toList();
-    }
-  }
-
-  void _toggleSelection(int index) {
-    setState(() {
-      if (_selectedIndices.contains(index)) {
-        _selectedIndices.remove(index);
-        controller.remainingCalories.value -= int.parse(
-          _filteredWorkouts[index].kcal,
-        );
-      } else {
-        _selectedIndices.add(index);
-        controller.remainingCalories.value += int.parse(
-          _filteredWorkouts[index].kcal,
-        );
-      }
-    });
-  }
-
-  Widget _exerciseCard({required WorkoutModel exercise, required int index}) {
-    final isSelected = _selectedIndices.contains(index);
+  Widget _exerciseCard() {
+    final isSelected = _selectedIndices.contains(1);
 
     return GestureDetector(
-      onTap: () => _toggleSelection(index),
+      onTap: (){},
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.w),
         child: Container(
@@ -284,8 +243,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                 child: Row(
                   children: [
-                    Image.asset(
-                      exercise.thumbnailUrl,
+                    Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s",
                       width: 60.w,
                       height: 60.h,
                     ),
@@ -293,8 +251,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          exercise.title,
+                        Text("exercise.title",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16.sp,
@@ -302,8 +259,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                           ),
                         ),
                         SizedBox(height: 5.h),
-                        Text(
-                          exercise.category,
+                        Text("exercise.category",
                           style: TextStyle(
                             color: Color(0xFFCCCBCB),
                             fontSize: 16.sp,
@@ -354,9 +310,9 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(child: _libraryItem(exercise)),
+                    Flexible(child: _libraryItem()),
                     SizedBox(width: 10.w),
-                    Flexible(child: _libraryItem(exercise)),
+                    Flexible(child: _libraryItem()),
                   ],
                 ),
               ),
@@ -368,14 +324,14 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
     );
   }
 
-  Widget _libraryItem(WorkoutModel workout) {
+  Widget _libraryItem() {
     return AspectRatio(
       aspectRatio: 3 / 2,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
           image: DecorationImage(
-            image: AssetImage(workout.imagePath),
+            image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s"),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.black.withOpacity(0.2),
@@ -410,8 +366,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                     children: [
                       Icon(Icons.timer, size: 14.sp, color: Colors.white),
                       SizedBox(width: 4.w),
-                      Text(
-                        workout.time,
+                      Text("workout.time",
                         style: TextStyle(color: Colors.white, fontSize: 12.sp),
                       ),
                       SizedBox(width: 8.w),
@@ -421,8 +376,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                         color: Colors.white,
                       ),
                       SizedBox(width: 4.w),
-                      Text(
-                        workout.kcal,
+                      Text("workout.kcal",
                         style: TextStyle(color: Colors.white, fontSize: 12.sp),
                       ),
                     ],
@@ -443,6 +397,8 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
       children: [
         Column(
           children: [
+
+            //Suggest Exercise filter
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
@@ -453,7 +409,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                     style: TextStyle(color: Color(0xFFF5838C), fontSize: 20.sp),
                   ),
                   GestureDetector(
-                    onTap: _toggleDropdown,
+                    onTap: (){},
                     child: Row(
                       children: [
                         Text(
@@ -476,18 +432,18 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
               ),
             ),
             SizedBox(height: 8.h),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _filteredWorkouts.length,
-              itemBuilder: (context, index) {
-                final exercise = _filteredWorkouts[index];
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  child: _exerciseCard(exercise: exercise, index: index),
-                );
-              },
-            ),
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   physics: NeverScrollableScrollPhysics(),
+            //   itemCount: _filteredWorkouts.length,
+            //   itemBuilder: (context, index) {
+            //     final exercise = _filteredWorkouts[index];
+            //     return Padding(
+            //       padding: EdgeInsets.only(bottom: 12.h),
+            //       child: _exerciseCard(exercise: exercise, index: index),
+            //     );
+            //   },
+            // ),
           ],
         ),
         if (_isDropdownOpen)
@@ -538,7 +494,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                   ),
                   ...List.generate(_options.length, (index) {
                     return GestureDetector(
-                      onTap: () => _toggleOption(index),
+                      onTap: (){},
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
@@ -555,7 +511,7 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
                             children: [
                               Checkbox(
                                 value: _selectedOptions[index],
-                                onChanged: (value) => _toggleOption(index),
+                                onChanged: (value) {},
                                 activeColor: Colors.transparent,
                                 checkColor: Colors.white,
                                 side: BorderSide(color: Colors.white),
@@ -590,9 +546,9 @@ class _CustomDropdownWithFilterState extends State<CustomDropdownWithFilter> {
 }
 
 class WorkoutCard extends StatelessWidget {
-  final WorkoutModel workout;
 
-  const WorkoutCard({super.key, required this.workout});
+
+  const WorkoutCard({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -610,20 +566,18 @@ class WorkoutCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Image.asset(workout.thumbnailUrl, height: 60),
+                ResponsiveNetworkImage(imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s',heightPercent: .05,),
                 SizedBox(width: 10.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      workout.title,
+                    Text("Title",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      workout.category,
+                    Text("workout.category",
                       style: TextStyle(color: Colors.grey),
                     ),
                   ],

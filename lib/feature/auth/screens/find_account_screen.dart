@@ -5,6 +5,7 @@ import 'package:omega_web_inv/core/const/app_loader.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_button.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_text_field.dart';
 
+import '../../../route/route.dart';
 import '../controller/forget_pasword_controller.dart';
 
 

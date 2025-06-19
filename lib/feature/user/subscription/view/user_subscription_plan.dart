@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:omega_web_inv/core/global_widegts/custom_app_bar.dart';
+import '../../bottom_nav_bar/screen/custom_bottom_navbar.dart';
 import '../../profile/view/user_info_setup.dart';
 import '../controller/user_subscription_controller.dart';
 
@@ -299,7 +300,7 @@ class SubscriptionPlan extends StatelessWidget {
                             selectedOption: '$selectedOption ($planTitle)',
                           );
 
-                          Get.to(() => UserInfoSetup());
+                          Get.to(()=>BottomNavBarScreen());
                           Get.snackbar(
                             'Subscription Successful!',
                             'Your subscription has been successfully activated.',

@@ -13,10 +13,7 @@ Widget _exerciseCard({
 }) {
   final controller = Get.find<WorkoutPlanController>();
   return GestureDetector(
-    onTap:
-        exerciseId != null
-            ? () => controller.completeExercise(kcal, exerciseId)
-            : null,
+    onTap:(){},
     child: Container(
       width: 220.w,
       height: 164.h,
