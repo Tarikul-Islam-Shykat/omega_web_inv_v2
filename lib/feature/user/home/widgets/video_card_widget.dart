@@ -12,6 +12,9 @@ class WorkoutVideoCard extends StatelessWidget {
   final String time;
   final String kcal;
   final bool isIcon;
+  final double? height;
+  final double? width;
+  final double? widthTime;
 
   const WorkoutVideoCard({
     super.key,
@@ -19,6 +22,9 @@ class WorkoutVideoCard extends StatelessWidget {
     required this.time,
     required this.kcal,
     this.isIcon = true,
+    this.height= 90,
+    this.width=135,
+    this.widthTime,
   });
 
   @override
@@ -28,8 +34,8 @@ class WorkoutVideoCard extends StatelessWidget {
 
     return Obx(() {
       return Container(
-        width: 135.w,
-        height: 90.h,
+        width: width?.w,
+        height: height?.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
         ),
@@ -37,8 +43,8 @@ class WorkoutVideoCard extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             controller.isInitialized.value ? Container(
-              height: 90.h,
-                  width: 150.w,
+              height: height?.h,
+              width: width?.w,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.white10),
                     borderRadius: BorderRadius.circular(10)
@@ -75,24 +81,31 @@ class WorkoutVideoCard extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
                 child: Container(
+                  width: widthTime,
                   decoration: BoxDecoration(
+                    //color: Colors.amber,
                     color: Color(0xFFFFFFFF).withAlpha(30),
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                         isIcon?Icon(Icons.timer, size: 14.sp, color: Colors.white):Center(),
-
-                        SizedBox(width: 4.w),
-                        Text(
-                          time,
-                          style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            isIcon?Icon(Icons.timer, size: 14.sp, color: Colors.white):Center(),
+                            SizedBox(width: 4.w),
+                            Text(
+                              time,
+                              style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 6.w),
                         Container(
-                          height: 10,
+                          height: 13,
                           decoration: BoxDecoration(
                             border: Border(
                               left: BorderSide(
@@ -103,13 +116,25 @@ class WorkoutVideoCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(width: 6.w),
-                        Image.asset(ImagePath.energy,height:12.sp ,color: Colors.white,),
-                        SizedBox(width: 4.w),
-                        Text(
-                          kcal,
-                          style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(ImagePath.energy,height:12.sp ,color: Colors.white,),
+                            SizedBox(width: 4.w),
+                            Text(
+                              kcal,
+                              style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                            ),
+                          ],
                         ),
+
+
+
+                        // SizedBox(width: 6.w),
+                        //
+                        // SizedBox(width: 6.w),
+
                       ],
                     ),
                   ),

@@ -2,15 +2,19 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:omega_web_inv/core/const/app_loader.dart';
+import 'package:omega_web_inv/feature/user/workouts/controller/fitness_name_controller.dart';
+import 'package:omega_web_inv/feature/user/workouts/controller/workout_controller.dart';
 import '../../../../core/global_widegts/app_network_image.dart';
 import '../../chat/chatbox/chat_message.dart';
-import '../../home/controller/workout_plan_controller.dart';
 import '../../home/widgets/exercise_library.dart';
 import '../../home/widgets/video_card_widget.dart';
 import '../widget/card_widget.dart';
+import 'multiple_select_dropdown.dart';
 
 class WorkoutPage extends StatelessWidget {
-  final WorkoutPlanController controller = Get.put(WorkoutPlanController());
+  final AllWorkoutController controller = Get.put(AllWorkoutController());
+  final FitnessNameController fitnessController = Get.put(FitnessNameController());
 
 
 
@@ -31,7 +35,10 @@ class WorkoutPage extends StatelessWidget {
               //dash board
               goalCard(name: "Workout Goals",cal: "540"),
               SizedBox(height: 10.h,),
-              goalCard(name: "Selected Workout",cal: "320"),
+              Obx((){
+                  return goalCard(name: "Selected Workout",cal:"${controller.selectKcal}");
+                }
+              ),
 
               SizedBox(height: 10.h,),
               Padding(
@@ -44,8 +51,13 @@ class WorkoutPage extends StatelessWidget {
                       style: TextStyle(
                           color: Color(0xFFF5838C), fontSize: 20.sp),
                     ),
+
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+
+                        fitnessController.toggleDropdown();
+
+                      },
                       child: Row(
                         children: [
                           Text(
@@ -67,134 +79,150 @@ class WorkoutPage extends StatelessWidget {
                   ],
                 ),
               ),
+
+              //filter fitness name
+              FitnessFilterDropdown(),
               //workout list
-              ListView.builder(
-                  itemCount: 3,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 12.w, vertical: 10.h),
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r),
-                          color: const Color(0xFFFFFFFF).withAlpha(18),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            //title
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.w, vertical: 10.h),
-                              child: Row(
-                                children: [
-                                  ResponsiveNetworkImage(
-                                    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFU7U2h0umyF0P6E_yhTX45sGgPEQAbGaJ4g&s",
-                                    heightPercent: .05,
-                                    widthPercent: .1,),
-                                  SizedBox(width: 10.w),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+              Obx((){
+                if(controller.isLoadingWorkout.value){
+                  return Center(child: loader(),);
+                }else if(controller.allWorkout.isEmpty){
+                  return Center(child: Text("No Data Found"),);
+                }else{
+                  return ListView.builder(
+                      itemCount:  controller.filteredWorkout.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final data = controller.filteredWorkout[index];
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.w, vertical: 10.h),
+                          child: GestureDetector(
+                            onTap: ()=>controller.onSelectWorkoutKcal(data),
+                            child: Obx((){
+                                return Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    color: const Color(0xFFFFFFFF).withAlpha(18),
+                                    border:Border.all(color:controller.selectedWorkouts.contains(data)?Color(0xFFFB4958):Colors.transparent),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text("Barbell squat",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.bold,
+                                      //title
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20.w, vertical: 10.h),
+                                        child: Row(
+                                          children: [
+                                            ResponsiveNetworkImage(
+                                              imageUrl: "${data.icon}",
+                                              heightPercent: .05,
+                                              widthPercent: .1,),
+                                            SizedBox(width: 10.w),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text("${data.title}",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 3.h),
+                                                Text("${data.fitnessGoal}",
+                                                  style: TextStyle(
+                                                      color: Color(0xFFCCCBCB),
+                                                      fontSize: 14.sp,
+                                                      fontWeight: FontWeight.w400
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      SizedBox(height: 3.h),
-                                      Text("Lose Weight ",
-                                        style: TextStyle(
-                                            color: Color(0xFFCCCBCB),
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400
+
+                                      /// Suggest Library Title Row
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Suggest Exercise Library',
+                                              style: TextStyle(
+                                                color: Color(0xFFF5838C),
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                log('See all tapped');
+                                                Get.to(() => ExerciseLibrary());
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'See all',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12.sp,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                    ),
+                                                  ),
+                                                  Icon(Icons.arrow_right,
+                                                      color: Colors.white),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
+
+                                      SizedBox(height: 10.h),
+
+                                      /// 2 Row Items
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Flexible(
+                                              child: WorkoutVideoCard(
+                                                videoUrl: "${data.video}",
+                                                time: "${data.duration}",
+                                                kcal: "${data.kcal}",
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: WorkoutVideoCard(
+                                                videoUrl: "${data.video}",
+                                                time: "${data.duration}",
+                                                kcal: "${data.kcal}",
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 16.h),
                                     ],
                                   ),
-                                ],
-                              ),
+                                );
+                              }
                             ),
+                          ),
+                        );
+                      });
+                }
 
-                            /// Suggest Library Title Row
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    'Suggest Exercise Library',
-                                    style: TextStyle(
-                                      color: Color(0xFFF5838C),
-                                      fontSize: 12.sp,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      log('See all tapped');
-                                      Get.to(() => ExerciseLibrary());
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'See all',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12.sp,
-                                            decoration: TextDecoration
-                                                .underline,
-                                          ),
-                                        ),
-                                        Icon(Icons.arrow_right,
-                                            color: Colors.white),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-
-                            /// 2 Row Items
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: WorkoutVideoCard(
-                                      videoUrl: "https://nyc3.digitaloceanspaces.com/smtech-space/nathancloud/1749632725134_15d25a3d-aacf-4053-ae15-c0471c9a704b_Frame 1321315490.png",
-                                      time: "12:00",
-                                      kcal: "120",
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: WorkoutVideoCard(
-                                      videoUrl: "https://nyc3.digitaloceanspaces.com/smtech-space/nathancloud/1749632725134_15d25a3d-aacf-4053-ae15-c0471c9a704b_Frame 1321315490.png",
-                                      time: "12:00",
-                                      kcal: "120",
-                                    ),
-                                  ),
-
-                                ],
-                              ),
-                            ),
-
-
-                            SizedBox(height: 16.h),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
+                }),
               //Your Trainer
               Padding(
                 padding: EdgeInsets.all(16.w),
@@ -226,5 +254,40 @@ class WorkoutPage extends StatelessWidget {
       ),
     );
   }
+
+  void showFilterDialog(BuildContext context, FitnessNameController fitnessController, AllWorkoutController workoutController) {
+    showModalBottomSheet(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) {
+        return Obx(() => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 10),
+            Text("Fitness Goal", style: TextStyle(color: Colors.white, fontSize: 18)),
+            ...fitnessController.fitnessNameModel.map((fitness) {
+              final isSelected = fitnessController.selectedFitnessNames.contains(fitness.title);
+              return CheckboxListTile(
+                activeColor: Colors.redAccent,
+                value: isSelected,
+                title: Text(fitness.title.toString(), style: TextStyle(color: Colors.white)),
+                onChanged: (_) {
+                  fitnessController.toggleSelection(fitness.title.toString());
+                  workoutController.applyFilter(fitnessController.selectedFitnessNames);
+                },
+              );
+            }),
+            SizedBox(height: 10),
+          ],
+        ));
+      },
+    );
+  }
+
+
+
 
 }

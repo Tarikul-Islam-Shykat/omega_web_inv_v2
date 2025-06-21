@@ -37,7 +37,7 @@ class WorkoutPlanController extends GetxController {
     }
   }
 
-  Future<bool> workoutCompleted(String id, int kcal, int index) async {
+  Future<bool> workoutCompleted(String id, int kcal) async {
     isLoadingComplete.value = true;
     try {
       final response = await _networkConfig.ApiRequestHandler(
@@ -46,6 +46,7 @@ class WorkoutPlanController extends GetxController {
         {},
         is_auth: true,
       );
+      log("API PATCH Response: $response");
 
       if (response != null && response["success"] == true) {
         AppSnackbar.show(message: "${response["message"]}", isSuccess: true);
@@ -54,7 +55,6 @@ class WorkoutPlanController extends GetxController {
         totalBurnedCalories.value += kcal;
 
 
-        workOutPlan[index].isCompleted = true;
         workOutPlan.refresh();
 
         return true;
@@ -64,8 +64,9 @@ class WorkoutPlanController extends GetxController {
         return false;
       }
     } catch (e) {
-      AppSnackbar.show(message: e.toString(), isSuccess: false);
-      log("failed Response patch data ${e.toString()}");
+      AppSnackbar.show(message: "Error: ${e.toString()}", isSuccess: false);
+      log("Exception in patch: ${e.toString()}");
+      log("An unexpected error occurred. Please try again later.");
       return false;
     } finally {
       isLoadingComplete.value = false;

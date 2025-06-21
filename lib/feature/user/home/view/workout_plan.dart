@@ -190,7 +190,6 @@ class WorkoutPlan extends StatelessWidget {
                                             controller.workoutCompleted(
                                               data.id.toString(),
                                               int.parse(data.kcal.toString()),
-                                              index,
                                             );
                                           },
                                           style: ElevatedButton.styleFrom(

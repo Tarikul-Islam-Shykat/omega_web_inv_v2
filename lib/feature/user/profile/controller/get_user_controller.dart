@@ -15,32 +15,33 @@ class GetUserController extends GetxController{
     @override
     onInit(){
     super.onInit();
-    //getUserInfo();
+    getUserInfo();
     getMeUser();
     }
 
 
     //details with user info
-    // Future<bool> getUserInfo()async{
-    //   isLoading.value = true;
-    //   try{
-    //     final response = await _networkConfig.ApiRequestHandler(RequestMethod.GET, Urls.getUserInfo, {},is_auth: true);
-    //
-    //     if(response != null && response["success"] == true){
-    //       userModel.value = response['data'].map((e)=>UserInfoModel.fromJson(e));
-    //       log("Get success user info${response["message"]}");
-    //       return true;
-    //     }else{
-    //       log("Get failed user info ${response["message"]}");
-    //       return false;
-    //     }
-    //   }catch(e){
-    //     log("Failed get user ${e.toString()}");
-    //     return false;
-    //   }finally{
-    //     isLoading.value = false;
-    //   }
-    // }
+    Future<bool> getUserInfo()async{
+      isLoading.value = true;
+      try{
+        final response = await _networkConfig.ApiRequestHandler(RequestMethod.GET, Urls.getUserInfo, {},is_auth: true);
+
+        if(response != null && response["success"] == true){
+          userModel.value = UserInfoModel.fromJson(response["data"]);
+          userModel.value = response['data'].map((e)=>UserInfoModel.fromJson(e));
+          log("Get success user info${response["message"]}");
+          return true;
+        }else{
+          log("Get failed user info ${response["message"]}");
+          return false;
+        }
+      }catch(e){
+        log("Failed get user ${e.toString()}");
+        return false;
+      }finally{
+        isLoading.value = false;
+      }
+    }
 
     //just user info
   Future<bool> getMeUser()async{

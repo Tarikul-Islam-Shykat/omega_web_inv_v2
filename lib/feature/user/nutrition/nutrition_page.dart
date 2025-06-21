@@ -306,77 +306,77 @@ class NutritionPage extends StatelessWidget {
     );
   }
 
-//   Widget _goalCard(double sw) {
-//     final GoalController goalController = Get.find();
-//
-//     return Obx(
-//       () => _buildCard(
-//         sw,
-//         'Meal Goals',
-//         goalController.caloriesEaten.value.split(' ')[0],
-//       ),
-//     );
-//   }
-//
-//   Widget _selectMealCard(double sw) {
-//     return Obx(
-//       () => _buildCard(
-//         sw,
-//         'Select Meal',
-//         '${controller.remainingCalories.value}',
-//       ),
-//     );
-//   }
-//
-//   Widget _buildCard(double sw, String title, String value) {
-//     return Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 12.w),
-//       child: Container(
-//         height: 60.h,
-//         width: sw * 0.95,
-//         decoration: BoxDecoration(
-//           color: Colors.white.withAlpha(18),
-//           borderRadius: BorderRadius.circular(12.r),
-//         ),
-//         child: Center(
-//           child: Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 8.w),
-//             child: Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text(
-//                   '$title ',
-//                   style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 26.sp,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 Text(
-//                   value,
-//                   style: TextStyle(
-//                     color: Color(0xFFFB4958),
-//                     fontSize: 26.sp,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                 Text(
-//                   ' Kcal',
-//                   style: TextStyle(
-//                     color: Color(0xFFFB4958),
-//                     fontSize: 26.sp,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
+  // Widget _goalCard(double sw) {
+  //   final GoalController goalController = Get.find();
+  //
+  //   return Obx(
+  //     () => _buildCard(
+  //       sw,
+  //       'Meal Goals',
+  //       goalController.caloriesEaten.value.split(' ')[0],
+  //     ),
+  //   );
+  // }
+  //
+  // Widget _selectMealCard(double sw) {
+  //   return Obx(
+  //     () => _buildCard(
+  //       sw,
+  //       'Select Meal',
+  //       '${controller.remainingCalories.value}',
+  //     ),
+  //   );
+  // }
+  //
+  // Widget _buildCard(double sw, String title, String value) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 12.w),
+  //     child: Container(
+  //       height: 60.h,
+  //       width: sw * 0.95,
+  //       decoration: BoxDecoration(
+  //         color: Colors.white.withAlpha(18),
+  //         borderRadius: BorderRadius.circular(12.r),
+  //       ),
+  //       child: Center(
+  //         child: Padding(
+  //           padding: EdgeInsets.symmetric(horizontal: 8.w),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               Text(
+  //                 '$title ',
+  //                 style: TextStyle(
+  //                   color: Colors.white,
+  //                   fontSize: 26.sp,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //               Text(
+  //                 value,
+  //                 style: TextStyle(
+  //                   color: Color(0xFFFB4958),
+  //                   fontSize: 26.sp,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //               Text(
+  //                 ' Kcal',
+  //                 style: TextStyle(
+  //                   color: Color(0xFFFB4958),
+  //                   fontSize: 26.sp,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+}
+
 // class CustomDropdownWithFilter extends StatefulWidget {
 //   final List<NutritionModel> nutritions;
 //   final double sw;
@@ -759,4 +759,4 @@ class NutritionPage extends StatelessWidget {
 //       ],
 //     );
 //   }
- }
+//  }

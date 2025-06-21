@@ -17,6 +17,8 @@ class Urls {
   static const String workoutPlan = "$baseUrl/workout-plans"; //GET USER
   static const String completeWorkoutPlan = "$baseUrl/workout-plans"; //PATCH id
 
+  static const String fitnessName = "$baseUrl/fitness-goal"; //GET
+
 
 
   static const String pickUpLocation = '$baseUrl/user/pickup-locations';

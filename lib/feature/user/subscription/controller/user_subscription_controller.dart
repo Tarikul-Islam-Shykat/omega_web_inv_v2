@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 //   }
 // }
 
-class SubscriptionController extends GetxController {
+class  SubscriptionController extends GetxController {
   var selectedIndex = 0.obs;
   var selectedPlanName = ''.obs;
   var selectedPlanPrice = ''.obs;
